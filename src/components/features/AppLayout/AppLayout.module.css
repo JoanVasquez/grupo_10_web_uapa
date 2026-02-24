@@ -15,12 +15,14 @@
 .main {
   flex: 1;
   padding: 32px 36px;
+  position: relative;
 }
 
 @media (max-width: 768px) {
   .content {
     margin-left: 0;
   }
+
   .main {
     padding: 20px 16px;
   }

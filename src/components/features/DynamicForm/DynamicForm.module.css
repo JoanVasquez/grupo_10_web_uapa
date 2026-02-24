@@ -45,6 +45,7 @@
   .grid {
     grid-template-columns: 1fr;
   }
+
   .colSpan2 {
     grid-column: 1;
   }
