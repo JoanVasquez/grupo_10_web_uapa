@@ -39,7 +39,12 @@ const ProductForm: React.FC<DynamicFormProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} onReset={handleReset} className={styles.form} aria-label={ariaLabel}>
+    <form
+      onSubmit={handleSubmit}
+      onReset={handleReset}
+      className={styles.form}
+      aria-label={ariaLabel}
+    >
       <fieldset className={styles.grid}>
         <legend className={styles.srOnly}>{ariaLabel}</legend>
         {fields.map((field) => {
