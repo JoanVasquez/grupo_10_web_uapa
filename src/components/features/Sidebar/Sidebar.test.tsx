@@ -13,8 +13,8 @@ describe("Sidebar", () => {
 
     expect(screen.getByText("SETTINGS")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Dashboard/i })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Forms/i })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Tables/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Formularios/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Tablas/i })).toBeInTheDocument();
   });
 
   it("calls onClose when clicking overlay", async () => {
