@@ -36,7 +36,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ sidebarTitle, headerActions, avat
           <Routes>
             <Route path="/" element={<RegisterProductsPage />} />
           </Routes>
-          <footer>Todos los derechos reservados</footer>
+          <footer>&copy;Derechos reservados</footer>
         </main>
       </div>
     </div>
