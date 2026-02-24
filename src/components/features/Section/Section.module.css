@@ -1,0 +1,28 @@
+.section {
+  background: #fff;
+  border-radius: 12px;
+  padding: 32px 36px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+.titleWrapper {
+  margin-bottom: 28px;
+}
+
+.title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #f97316;
+  margin: 0 0 10px;
+  font-family: inherit;
+}
+
+.divider {
+  height: 2px;
+  background: linear-gradient(90deg, #f97316 0%, transparent 60%);
+  border-radius: 2px;
+}
+
+@media (max-width: 600px) {
+  .section { padding: 20px 16px; }
+}
