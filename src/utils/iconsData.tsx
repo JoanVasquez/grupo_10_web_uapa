@@ -32,7 +32,7 @@ export const NAV_ITEMS: NavItem[] = [
     href: "/",
   },
   {
-    label: "Forms",
+    label: "Formularios",
     icon: (
       <Icons
         width="18"
@@ -57,7 +57,7 @@ export const NAV_ITEMS: NavItem[] = [
     // active: true,
   },
   {
-    label: "Tables",
+    label: "Tablas",
     icon: (
       <Icons
         width="18"
