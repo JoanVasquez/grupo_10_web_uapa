@@ -1,44 +1,54 @@
-# Product App
+## Participantes
 
-React + TypeScript application built with Vite.
+- Sarai Rodríguez Santos
+- Alan Edberg Cabrera Gómez
+- Yanely de Jesús Ledesma Vega
+- Fraulyn Anerky Ramírez Aguero
+- Miguel Angel Rodríguez Díaz
+- José Eladio Santana Fernández
+- Joan Manuel Vásquez Rodríguez
 
-## Requirements
+# Aplicación de Producto
+
+Aplicación de React + TypeScript construida con Vite.
+
+## Requisitos
 
 - Node.js 24.x
 - npm 10+
 
-## Getting Started
+## Inicio rápido
 
 ```bash
 npm install
 npm run dev
 ```
 
-App runs locally with Vite dev server (default: `http://localhost:5173`).
+La app se ejecuta localmente con el servidor de desarrollo de Vite (por defecto: `http://localhost:5173`).
 
-## Available Scripts
+## Scripts disponibles
 
-- `npm run dev`: start local development server.
-- `npm run build`: type-check and build production files into `dist/`.
-- `npm run preview`: preview the production build locally.
-- `npm run lint`: run ESLint checks.
-- `npm run test`: run unit tests once with Vitest.
-- `npm run test:watch`: run Vitest in watch mode.
+- `npm run dev`: inicia el servidor local de desarrollo.
+- `npm run build`: verifica tipos y compila los archivos de producción en `dist/`.
+- `npm run preview`: previsualiza localmente la compilación de producción.
+- `npm run lint`: ejecuta las validaciones de ESLint.
+- `npm run test`: ejecuta una vez las pruebas unitarias con Vitest.
+- `npm run test:watch`: ejecuta Vitest en modo observación.
 
-## Project Structure
+## Estructura del proyecto
 
 ```text
 src/
-  components/   reusable UI and feature components
-  pages/        route-level pages
-  utils/        UI/config helpers
-  types/        shared TypeScript types
-  test/         test setup
+  components/   componentes reutilizables de UI y funcionalidades
+  pages/        páginas a nivel de ruta
+  utils/        utilidades auxiliares de UI/configuración
+  types/        tipos TypeScript compartidos
+  test/         configuración de pruebas
 ```
 
-## Quality Checks
+## Verificaciones de calidad
 
-Run before pushing code:
+Ejecuta esto antes de subir código:
 
 ```bash
 npm run lint
@@ -47,18 +57,18 @@ npm run test
 
 ## GitHub Actions
 
-Workflows in `.github/workflows`:
+Workflows en `.github/workflows`:
 
-- `eslint.yml`: runs ESLint on pull requests targeting `master`.
-- `test.yml`: runs unit tests on pull requests targeting `master`.
-- `deploy.yml`: builds and deploys the static app to GitHub Pages on pushes to `master` (including merge commits).
+- `eslint.yml`: ejecuta ESLint en pull requests dirigidos a `master`.
+- `test.yml`: ejecuta pruebas unitarias en pull requests dirigidos a `master`.
+- `deploy.yml`: compila y despliega la app estática en GitHub Pages cuando hay pushes a `master` (incluyendo merge commits).
 
-## Deployment
+## Despliegue
 
-Deployment uses GitHub Pages via Actions.
+El despliegue usa GitHub Pages por medio de Actions.
 
-One-time repo setup:
+Configuración inicial (una sola vez):
 
-1. Go to repository `Settings`.
-2. Open `Pages`.
-3. Set source to `GitHub Actions`.
+1. Ve a `Settings` del repositorio.
+2. Abre `Pages`.
+3. Establece la fuente en `GitHub Actions`.
