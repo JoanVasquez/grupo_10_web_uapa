@@ -27,7 +27,7 @@ footer {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  bottom: 10px;
+  bottom: 0;
   color: #d4d4d4;
   width: 100%;
   text-align: center;
