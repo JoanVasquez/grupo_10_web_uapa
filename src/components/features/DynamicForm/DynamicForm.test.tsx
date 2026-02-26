@@ -1,8 +1,7 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import DynamicForm from "./DynamicForm";
-import type { FormField } from "../../../types/FormField";
+import DynamicForm, { FormField } from "./DynamicForm";
 
 type FormValues = {
   code: string;
@@ -26,7 +25,12 @@ type TestFormProps = {
   resetLabel?: string;
 };
 
-const TestForm: React.FC<TestFormProps> = ({ onSubmit = vi.fn(), onReset, submitLabel, resetLabel }) => {
+const TestForm: React.FC<TestFormProps> = ({
+  onSubmit = vi.fn(),
+  onReset,
+  submitLabel,
+  resetLabel,
+}) => {
   const [values, setValues] = React.useState<FormValues>(INITIAL_VALUES);
 
   const handleChange = <K extends keyof FormValues>(id: K, value: FormValues[K]) => {
