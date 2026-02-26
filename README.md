@@ -12,6 +12,19 @@
 
 Aplicación de React + TypeScript construida con Vite.
 
+## Funcionalidades del proyecto
+
+- Layout principal con `Sidebar` + `Header` y área de contenido.
+- Navegación con `react-router-dom` y soporte de `basename` para despliegue en subruta (GitHub Pages).
+- Menú lateral responsive con overlay y botón hamburguesa para abrir/cerrar.
+- Header con acciones configurables (notificaciones/mensajes), badges y avatar.
+- Formulario dinámico reutilizable (`DynamicForm`) con campos `text`, `number` y `textarea`.
+- Registro de productos en `/` con campos: código, nombre, descripción, categoría, marca, modelo y stock.
+- Componentes UI reutilizables (`Button`, `Input`, `Textarea`, `Badge`, `Icons`, `Section`).
+- Pruebas unitarias de componentes con Vitest + Testing Library.
+- Pipeline CI en GitHub Actions para lint, test y build.
+- Despliegue automático a GitHub Pages y soporte de contenedores con Docker + Nginx.
+
 ## Requisitos
 
 - Node.js 24.x
@@ -25,6 +38,16 @@ npm run dev
 ```
 
 La app se ejecuta localmente con el servidor de desarrollo de Vite (por defecto: `http://localhost:5173`).
+
+## Ejecución con Docker
+
+Construir y ejecutar con Docker Compose:
+
+```bash
+docker compose up --build
+```
+
+La app quedará disponible en `http://localhost:8080`.
 
 ## Scripts disponibles
 
@@ -61,6 +84,7 @@ Workflows en `.github/workflows`:
 
 - `eslint.yml`: ejecuta ESLint en pull requests dirigidos a `master`.
 - `test.yml`: ejecuta pruebas unitarias en pull requests dirigidos a `master`.
+- `build.yml`: ejecuta la compilación de la app en pull requests dirigidos a `master`.
 - `deploy.yml`: compila y despliega la app estática en GitHub Pages cuando hay pushes a `master` (incluyendo merge commits).
 
 ## Despliegue
