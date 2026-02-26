@@ -1,6 +1,6 @@
 import React from "react";
 import AppLayout from "./components/features/AppLayout/AppLayout";
-import { HEADER_ACTIONS } from "./utils/iconsData";
+import { HEADER_ACTIONS } from "./components/common/Icons/iconsData";
 
 const App: React.FC = () => {
   return (
