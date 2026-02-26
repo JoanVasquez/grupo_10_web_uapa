@@ -5,18 +5,18 @@ import { FormField } from "../types/FormField";
 import { Product } from "../types/Product";
 
 const PRODUCT_FIELDS: FormField[] = [
-  { id: "codigo", label: "Codigo", type: "text", placeholder: "Escribir el codigo" },
-  { id: "nombre", label: "Nombre", type: "text", placeholder: "Escribir el nombre" },
+  { id: "code", label: "Codigo", type: "text", placeholder: "Escribir el codigo" },
+  { id: "name", label: "Nombre", type: "text", placeholder: "Escribir el nombre" },
   {
-    id: "descripcion",
+    id: "description",
     label: "Descripcion",
     type: "textarea",
     colSpan: 2,
     placeholder: "Escribir la descripcion",
   },
-  { id: "categoria", label: "Categoría", type: "text", placeholder: "Escribir la categoria" },
-  { id: "marca", label: "Marca", type: "text", placeholder: "Escribir la marcar" },
-  { id: "modelo", label: "Modelo", type: "text", placeholder: "Escribir el modelo" },
+  { id: "category", label: "Categoría", type: "text", placeholder: "Escribir la categoria" },
+  { id: "brand", label: "Marca", type: "text", placeholder: "Escribir la marca" },
+  { id: "model", label: "Modelo", type: "text", placeholder: "Escribir el modelo" },
   { id: "stock", label: "Stock", type: "number", placeholder: "Escribir la cantidad de stock" },
 ];
 
