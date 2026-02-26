@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./Header.module.css";
 
-interface HeaderAction {
+export interface HeaderAction {
   id: string;
   icon: React.ReactNode;
   badge?: number;

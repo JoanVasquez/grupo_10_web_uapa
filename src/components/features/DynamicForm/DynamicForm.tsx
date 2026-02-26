@@ -1,9 +1,17 @@
 import React from "react";
-import type { FormField } from "../../../types/FormField";
 import { Input } from "../../index";
 import { Textarea } from "../../index";
 import { Button } from "../../index";
 import styles from "./DynamicForm.module.css";
+
+export interface FormField {
+  id: string;
+  label: string;
+  type?: "text" | "number" | "email" | "textarea" | "select";
+  placeholder?: string;
+  options?: { value: string; label: string }[];
+  colSpan?: 1 | 2;
+}
 
 type FormValue = string | number;
 

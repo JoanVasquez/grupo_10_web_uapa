@@ -8,12 +8,7 @@ interface SectionProps {
   headingLevel?: 1 | 2 | 3 | 4 | 5 | 6;
 }
 
-const Section: React.FC<SectionProps> = ({
-  title,
-  children,
-  className = "",
-  headingLevel = 2,
-}) => {
+const Section: React.FC<SectionProps> = ({ title, children, className = "", headingLevel = 2 }) => {
   const HeadingTag = `h${headingLevel}` as "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 
   return (
