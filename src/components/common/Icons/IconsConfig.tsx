@@ -1,4 +1,4 @@
-import Icons from "../components/common/Icons/Icons";
+import Icons from "../Icons/Icons";
 
 export const SettingsLogo = () => (
   <Icons
