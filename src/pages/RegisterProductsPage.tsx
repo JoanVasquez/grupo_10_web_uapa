@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Section } from "../components/index";
 import { DynamicForm as ProductForm } from "../components/index";
-import { FormField } from "../types/FormField";
 import { Product } from "../types/Product";
+import { FormField } from "../components/features/DynamicForm/DynamicForm";
 
 const PRODUCT_FIELDS: FormField[] = [
   { id: "code", label: "Codigo", type: "text", placeholder: "Escribir el codigo" },

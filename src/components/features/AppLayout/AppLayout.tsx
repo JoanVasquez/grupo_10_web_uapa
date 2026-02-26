@@ -4,14 +4,7 @@ import { Header } from "../../index";
 import styles from "./AppLayout.module.css";
 import { Route, Routes } from "react-router-dom";
 import RegisterProductsPage from "../../../pages/RegisterProductsPage";
-
-interface HeaderAction {
-  id: string;
-  icon: React.ReactNode;
-  badge?: number;
-  onClick?: () => void;
-  label: string;
-}
+import { HeaderAction } from "../Header/Header";
 
 interface AppLayoutProps {
   sidebarTitle: string;
