@@ -28,17 +28,16 @@ function DynamicForm<T extends { [K in keyof T]: FormValue | undefined }>({
   handleChange,
   values,
 }: DynamicFormProps<T>) {
-  const handleReset = () => {
-    onReset?.();
-  };
-
-  const mapInputValue = <K extends keyof T>(fieldType: FormField["type"], rawValue: string): T[K] => {
+  const mapInputValue = <K extends keyof T>(
+    fieldType: FormField["type"],
+    rawValue: string,
+  ): T[K] => {
     const mappedValue = fieldType === "number" ? Number(rawValue) : rawValue;
     return mappedValue as T[K];
   };
 
   return (
-    <form onSubmit={onSubmit} onReset={handleReset} className={styles.form} aria-label={ariaLabel}>
+    <form onSubmit={onSubmit} onReset={onReset} className={styles.form} aria-label={ariaLabel}>
       <fieldset className={styles.grid}>
         <legend className={styles.srOnly}>{ariaLabel}</legend>
         {fields.map((field) => {
@@ -54,7 +53,9 @@ function DynamicForm<T extends { [K in keyof T]: FormValue | undefined }>({
                   label={field.label}
                   placeholder={field.placeholder}
                   value={fieldValue ?? ""}
-                  onChange={(e) => handleChange(fieldId, mapInputValue<typeof fieldId>(field.type, e.target.value))}
+                  onChange={(e) =>
+                    handleChange(fieldId, mapInputValue<typeof fieldId>(field.type, e.target.value))
+                  }
                 />
               </div>
             );
@@ -68,7 +69,9 @@ function DynamicForm<T extends { [K in keyof T]: FormValue | undefined }>({
                 type={field.type || "text"}
                 placeholder={field.placeholder}
                 value={fieldValue ?? ""}
-                onChange={(e) => handleChange(fieldId, mapInputValue<typeof fieldId>(field.type, e.target.value))}
+                onChange={(e) =>
+                  handleChange(fieldId, mapInputValue<typeof fieldId>(field.type, e.target.value))
+                }
               />
             </div>
           );
@@ -79,9 +82,11 @@ function DynamicForm<T extends { [K in keyof T]: FormValue | undefined }>({
         <Button type="submit" variant="primary">
           {submitLabel}
         </Button>
-        <Button type="reset" variant="secondary" onClick={handleReset}>
-          {resetLabel}
-        </Button>
+        {onReset ? (
+          <Button type="reset" variant="secondary" onClick={onReset}>
+            {resetLabel}
+          </Button>
+        ) : null}
       </div>
     </form>
   );
