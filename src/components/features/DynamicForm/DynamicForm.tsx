@@ -1,54 +1,49 @@
-import React, { useState } from "react";
+import React from "react";
 import type { FormField } from "../../../types/FormField";
 import { Input } from "../../index";
 import { Textarea } from "../../index";
 import { Button } from "../../index";
 import styles from "./DynamicForm.module.css";
 
-interface DynamicFormProps {
+type FormValue = string | number;
+
+interface DynamicFormProps<T extends { [K in keyof T]: FormValue | undefined }> {
   fields: FormField[];
-  onSubmit: (data: Record<string, string>) => void;
+  onSubmit: (e: React.FormEvent) => void;
   onReset?: () => void;
   submitLabel?: string;
   resetLabel?: string;
   ariaLabel?: string;
+  handleChange: <K extends keyof T>(id: K, value: T[K]) => void;
+  values: T;
 }
 
-const ProductForm: React.FC<DynamicFormProps> = ({
+function DynamicForm<T extends { [K in keyof T]: FormValue | undefined }>({
   fields,
   onSubmit,
   onReset,
   submitLabel = "Guardar",
   resetLabel = "Limpiar",
   ariaLabel = "Dynamic form",
-}) => {
-  const [values, setValues] = useState<Record<string, string>>({});
-
-  const handleChange = (id: string, value: string) => {
-    setValues((prev) => ({ ...prev, [id]: value }));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSubmit(values);
-  };
-
-  const handleReset = () => {
-    setValues({});
-    onReset?.();
+  handleChange,
+  values,
+}: DynamicFormProps<T>) {
+  const mapInputValue = <K extends keyof T>(
+    fieldType: FormField["type"],
+    rawValue: string,
+  ): T[K] => {
+    const mappedValue = fieldType === "number" ? Number(rawValue) : rawValue;
+    return mappedValue as T[K];
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      onReset={handleReset}
-      className={styles.form}
-      aria-label={ariaLabel}
-    >
+    <form onSubmit={onSubmit} onReset={onReset} className={styles.form} aria-label={ariaLabel}>
       <fieldset className={styles.grid}>
         <legend className={styles.srOnly}>{ariaLabel}</legend>
         {fields.map((field) => {
           const spanClass = field.colSpan === 2 ? styles.colSpan2 : "";
+          const fieldId = field.id as keyof T;
+          const fieldValue = values[fieldId];
 
           if (field.type === "textarea") {
             return (
@@ -57,8 +52,10 @@ const ProductForm: React.FC<DynamicFormProps> = ({
                   id={field.id}
                   label={field.label}
                   placeholder={field.placeholder}
-                  value={values[field.id] || ""}
-                  onChange={(e) => handleChange(field.id, e.target.value)}
+                  value={fieldValue ?? ""}
+                  onChange={(e) =>
+                    handleChange(fieldId, mapInputValue<typeof fieldId>(field.type, e.target.value))
+                  }
                 />
               </div>
             );
@@ -71,8 +68,10 @@ const ProductForm: React.FC<DynamicFormProps> = ({
                 label={field.label}
                 type={field.type || "text"}
                 placeholder={field.placeholder}
-                value={values[field.id] || ""}
-                onChange={(e) => handleChange(field.id, e.target.value)}
+                value={fieldValue ?? ""}
+                onChange={(e) =>
+                  handleChange(fieldId, mapInputValue<typeof fieldId>(field.type, e.target.value))
+                }
               />
             </div>
           );
@@ -83,12 +82,14 @@ const ProductForm: React.FC<DynamicFormProps> = ({
         <Button type="submit" variant="primary">
           {submitLabel}
         </Button>
-        <Button type="reset" variant="secondary" onClick={handleReset}>
-          {resetLabel}
-        </Button>
+        {onReset ? (
+          <Button type="reset" variant="secondary" onClick={onReset}>
+            {resetLabel}
+          </Button>
+        ) : null}
       </div>
     </form>
   );
-};
+}
 
-export default ProductForm;
+export default DynamicForm;
