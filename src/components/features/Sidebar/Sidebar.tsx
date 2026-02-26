@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./Sidebar.module.css";
-import { SettingsLogo } from "../../../utils/IconsConfig";
-import { NAV_ITEMS } from "../../../utils/iconsData";
+import { SettingsLogo } from "../../common/Icons/IconsConfig";
+import { NAV_ITEMS } from "../../common/Icons/iconsData";
 import { NavLink } from "react-router-dom";
 
 interface SidebarProps {

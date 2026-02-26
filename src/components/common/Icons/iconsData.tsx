@@ -1,4 +1,4 @@
-import Icons from "../components/common/Icons/Icons";
+import Icons from "../../common/Icons/Icons";
 
 export interface NavItem {
   label: string;
