@@ -2,16 +2,11 @@ import React from "react";
 import { Input } from "../../index";
 import { Textarea } from "../../index";
 import { Button } from "../../index";
+import { FormError } from "../../index";
 import styles from "./DynamicForm.module.css";
+import { FormField } from "../../../types/FormField";
 
-export interface FormField {
-  id: string;
-  label: string;
-  type?: "text" | "number" | "email" | "textarea" | "select";
-  placeholder?: string;
-  options?: { value: string; label: string }[];
-  colSpan?: 1 | 2;
-}
+export type { FormField };
 
 type FormValue = string | number;
 
@@ -24,6 +19,7 @@ interface DynamicFormProps<T extends { [K in keyof T]: FormValue | undefined }> 
   ariaLabel?: string;
   handleChange: <K extends keyof T>(id: K, value: T[K]) => void;
   values: T;
+  errors?: { [K in keyof T]?: string };
 }
 
 function DynamicForm<T extends { [K in keyof T]: FormValue | undefined }>({
@@ -35,6 +31,7 @@ function DynamicForm<T extends { [K in keyof T]: FormValue | undefined }>({
   ariaLabel = "Dynamic form",
   handleChange,
   values,
+  errors = {},
 }: DynamicFormProps<T>) {
   const mapInputValue = <K extends keyof T>(
     fieldType: FormField["type"],
@@ -65,6 +62,7 @@ function DynamicForm<T extends { [K in keyof T]: FormValue | undefined }>({
                     handleChange(fieldId, mapInputValue<typeof fieldId>(field.type, e.target.value))
                   }
                 />
+                <FormError message={errors[fieldId]} />
               </div>
             );
           }
@@ -81,6 +79,7 @@ function DynamicForm<T extends { [K in keyof T]: FormValue | undefined }>({
                   handleChange(fieldId, mapInputValue<typeof fieldId>(field.type, e.target.value))
                 }
               />
+              <FormError message={errors[fieldId]} />
             </div>
           );
         })}
