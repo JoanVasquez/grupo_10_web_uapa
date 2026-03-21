@@ -1,4 +1,3 @@
-import React from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
@@ -8,6 +7,7 @@ import DynamicDataTable from '../components/features/DynamicDataTable/DynamicDat
 import Alert from '../components/common/Alert/Alert';
 import Card from '../components/common/Card/Card';
 import FormError from '../components/common/Form/FormError';
+import type { Product } from '../types/Product';
 
 const navigateMock = vi.fn();
 const createProductMock = vi.fn();
@@ -78,6 +78,17 @@ const ProductFormHarness = ({ submitValues }: ProductFormHarnessProps) => {
   );
 };
 
+const fallbackProduct: Product = {
+  code: 'X',
+  name: 'Fallback',
+  price: 0,
+  description: '',
+  category: '',
+  brand: '',
+  model: '',
+  stock: 0,
+};
+
 const ProductsTableHarness = () => {
   const { columns, feedback, handleDelete, handleEdit, isLoading, products } = useProductsTable();
 
@@ -86,11 +97,11 @@ const ProductsTableHarness = () => {
       <span data-testid="loading">{String(isLoading)}</span>
       <span data-testid="feedback">{feedback ? `${feedback.type}:${feedback.message}` : ''}</span>
       <span data-testid="product-count">{String(products.length)}</span>
-      <span data-testid="price-preview">{columns[4].render?.(products[0] ?? { price: 0 })}</span>
-      <button type="button" onClick={() => handleEdit(products[0] ?? { code: 'X', name: 'Fallback', price: 0, description: '', category: '', brand: '', model: '', stock: 0 })}>
+      <span data-testid="price-preview">{columns[4]!.render?.(products[0] ?? fallbackProduct)}</span>
+      <button type="button" onClick={() => handleEdit(products[0] ?? fallbackProduct)}>
         edit-first
       </button>
-      <button type="button" onClick={() => handleDelete(products[0] ?? { code: 'X', name: 'Fallback', price: 0, description: '', category: '', brand: '', model: '', stock: 0 })}>
+      <button type="button" onClick={() => handleDelete(products[0] ?? fallbackProduct)}>
         delete-first
       </button>
     </div>
@@ -270,11 +281,16 @@ describe('table and common presentational components', () => {
     const editMock = vi.fn();
     const deleteMock = vi.fn();
 
+    const columns = [
+      { key: 'name', header: 'Nombre' },
+      { key: 'price', header: 'Precio', render: (row: { id?: string; name: string; price: number }) => `$${row.price}` },
+    ];
+
     const { rerender } = render(
       <DynamicDataTable
-        columns={[{ key: 'name', header: 'Nombre' }, { key: 'price', header: 'Precio', render: (row: { price: number }) => `$${row.price}` }]}
+        columns={columns}
         data={[]}
-        getRowId={(row: { id?: string }) => row.id ?? '0'}
+        getRowId={(row: { id?: string; name: string; price: number }) => row.id ?? '0'}
         emptyMessage="Sin datos"
         isLoading
       />,
@@ -284,9 +300,9 @@ describe('table and common presentational components', () => {
 
     rerender(
       <DynamicDataTable
-        columns={[{ key: 'name', header: 'Nombre' }, { key: 'price', header: 'Precio', render: (row: { price: number }) => `$${row.price}` }]}
+        columns={columns}
         data={[]}
-        getRowId={(row: { id?: string }) => row.id ?? '0'}
+        getRowId={(row: { id?: string; name: string; price: number }) => row.id ?? '0'}
         emptyMessage="Sin datos"
       />,
     );
@@ -295,9 +311,9 @@ describe('table and common presentational components', () => {
 
     rerender(
       <DynamicDataTable
-        columns={[{ key: 'name', header: 'Nombre' }, { key: 'price', header: 'Precio', render: (row: { price: number }) => `$${row.price}` }]}
+        columns={columns}
         data={[{ id: '1', name: 'Tablet', price: 10 }]}
-        getRowId={(row: { id?: string }) => row.id ?? '0'}
+        getRowId={(row: { id?: string; name: string; price: number }) => row.id ?? '0'}
         onEdit={editMock}
         onDelete={deleteMock}
       />,
