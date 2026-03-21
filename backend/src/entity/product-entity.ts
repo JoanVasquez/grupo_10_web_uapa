@@ -6,10 +6,13 @@ export class Product {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
+  @Column({ default: "" })
+  code!: string;
+
   @Column()
   name!: string;
 
-  @Column()
+  @Column({ default: "" })
   description!: string;
   
   @Column("decimal")
@@ -17,6 +20,9 @@ export class Product {
 
   @Column()
   category!: string;
+
+  @Column({ default: "" })
+  brand!: string;
 
   @Column()
   model!: string;
