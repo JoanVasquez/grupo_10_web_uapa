@@ -8,6 +8,13 @@ const repoName = process.env.GITHUB_REPOSITORY?.split("/")[1];
 export default defineConfig({
   // base,
   plugins: [react(), tailwindcss()],
+  server: {
+    host: "0.0.0.0",
+    watch: {
+      usePolling: true,
+      interval: 1000,
+    },
+  },
   test: {
     environment: "jsdom",
     globals: true,
