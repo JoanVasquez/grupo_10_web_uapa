@@ -1,3 +1,5 @@
+import React from "react";
+
 interface IconsProps {
   width: string;
   height: string;
@@ -5,8 +7,8 @@ interface IconsProps {
   fill: string;
   stroke: string;
   strokeWidth: string;
-  strokeLineCap: "butt" | "round" | "square" | "inherit" | undefined;
-  strokeLineJoin: "round" | "inherit" | "miter" | "bevel" | undefined;
+  strokeLineCap?: "butt" | "round" | "square" | "inherit";
+  strokeLineJoin?: "round" | "inherit" | "miter" | "bevel";
   children: React.ReactNode;
 }
 
@@ -20,7 +22,7 @@ const Icons: React.FC<IconsProps> = ({
   strokeLineCap,
   strokeLineJoin,
   children,
-}: IconsProps) => {
+}) => {
   return (
     <svg
       width={width}

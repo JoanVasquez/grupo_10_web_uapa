@@ -1,15 +1,24 @@
-export type Login = {
-    _timeStamp: string;
-    _statusCode: number;
-    _status: string;
-    _data: {
-        token: string;
-    }
-}
+export type ApiErrorData = {
+  _message?: string;
+};
 
-export type Response = {
-     _timeStamp: string;
-    _statusCode: number;
-    _status: string;
-    _data: unknown;
-}
+export type Login = {
+  _timeStamp: string;
+  _statusCode: number;
+  _status: string;
+  _data: {
+    token: string;
+  };
+};
+
+export type Response<TData = unknown> = {
+  _timeStamp: string;
+  _statusCode: number;
+  _status: string;
+  _data: TData;
+};
+
+export type ApiMutationError = {
+  status?: number;
+  data?: ApiErrorData;
+};
