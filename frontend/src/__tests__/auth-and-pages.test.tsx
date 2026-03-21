@@ -114,4 +114,36 @@ describe('auth and page flows', () => {
     expect(localStorage.getItem('token')).toBeNull();
     expect(navigateMock).toHaveBeenCalledWith('/', { replace: true });
   });
+
+  it('shows a fallback error when product creation fails for another reason', async () => {
+    const user = userEvent.setup();
+    createProductMock.mockReturnValue({
+      unwrap: () => Promise.reject({ status: 500, data: {} }),
+    });
+
+    renderWithProviders(<RegisterProductsPage />);
+
+    await user.type(screen.getByLabelText('Código'), 'ABC');
+    await user.type(screen.getByLabelText('Nombre'), 'Tablet');
+    await user.type(screen.getByLabelText('Precio'), '10');
+    await user.type(screen.getByLabelText('Categoría'), 'Audio');
+    await user.type(screen.getByLabelText('Marca'), 'Sony');
+    await user.type(screen.getByLabelText('Modelo'), 'X1');
+    await user.type(screen.getByLabelText('Stock'), '3');
+    await user.click(screen.getByRole('button', { name: /guardar producto/i }));
+
+    expect(await screen.findByText('No se pudo registrar el producto.')).toBeInTheDocument();
+  });
+
+  it('clears the form when reset is requested after editing a field', async () => {
+    const user = userEvent.setup();
+    renderWithProviders(<RegisterProductsPage />);
+
+    const codeInput = screen.getByLabelText('Código') as HTMLInputElement;
+    await user.type(codeInput, 'ABC');
+    expect(codeInput.value).toBe('ABC');
+
+    await user.click(screen.getByRole('button', { name: /limpiar/i }));
+    expect(codeInput.value).toBe('');
+  });
 });

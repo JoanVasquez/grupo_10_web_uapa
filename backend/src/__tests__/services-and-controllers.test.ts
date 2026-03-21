@@ -13,6 +13,8 @@ import { Product } from '../entity/product-entity';
 import { User } from '../entity/user-entity';
 import { ICRUD } from '../types/ICRUD';
 import { IRepository } from '../types/IRepository';
+import { ProductService } from '../service/product-service';
+import { ProductRepository } from '../repository/product-repository';
 
 jest.mock('bcryptjs', () => ({
   __esModule: true,
@@ -212,5 +214,19 @@ describe('services and controllers', () => {
 
     const controller = new ProductController(crud);
     expect(controller).toBeInstanceOf(BaseController);
+  });
+
+  it('keeps product service wired to the given repository', () => {
+    const repository = {
+      create: jest.fn(),
+      findById: jest.fn(),
+      update: jest.fn(),
+      delete: jest.fn(),
+      findAll: jest.fn(),
+    } as unknown as ProductRepository;
+
+    const service = new ProductService(repository);
+
+    expect(service).toBeInstanceOf(GenericService);
   });
 });

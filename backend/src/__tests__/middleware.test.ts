@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import { Request, Response, NextFunction } from 'express';
-import jwt, { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
+import jwt, { JsonWebTokenError, NotBeforeError, TokenExpiredError } from 'jsonwebtoken';
 import { authenticateToken } from '../middleware/auth';
 import { errorHandler } from '../middleware/error-handler';
 import { validateRequest } from '../middleware/validate-request';
@@ -87,6 +87,48 @@ describe('middleware', () => {
     await authenticateToken(req, {} as Response, next);
 
     expect(nextMock.mock.calls[0]?.[0]).toBeInstanceOf(AuthError);
+  });
+
+  it('rejects missing tokens and invalid token payloads', async () => {
+    const nextMissing = jest.fn() as NextFunction;
+    await authenticateToken({ headers: {}, cookies: {} } as Request, {} as Response, nextMissing);
+    expect(nextMissing).toHaveBeenCalledWith(expect.objectContaining({ message: 'Unauthorized: No token provided' }));
+
+    const nextInvalid = jest.fn() as NextFunction;
+    (jwt.verify as jest.Mock).mockReturnValueOnce('plain-string-token');
+    await authenticateToken(
+      { headers: { authorization: 'Bearer malformed-token' }, cookies: {} } as Request,
+      {} as Response,
+      nextInvalid,
+    );
+    expect(nextInvalid).toHaveBeenCalledWith(expect.objectContaining({ message: 'Invalid token structure' }));
+  });
+
+  it('maps not-before JWT errors and forwards unexpected auth failures', async () => {
+    const nextNotBefore = jest.fn() as NextFunction;
+    (jwt.verify as jest.Mock).mockImplementationOnce(() => {
+      throw new NotBeforeError('inactive', new Date());
+    });
+
+    await authenticateToken(
+      { headers: { authorization: 'Bearer early-token' }, cookies: {} } as Request,
+      {} as Response,
+      nextNotBefore,
+    );
+    expect(nextNotBefore).toHaveBeenCalledWith(expect.any(AuthError));
+
+    const genericFailure = new Error('unexpected verify failure');
+    const nextGeneric = jest.fn() as NextFunction;
+    (jwt.verify as jest.Mock).mockImplementationOnce(() => {
+      throw genericFailure;
+    });
+
+    await authenticateToken(
+      { headers: { authorization: 'Bearer broken-token' }, cookies: {} } as Request,
+      {} as Response,
+      nextGeneric,
+    );
+    expect(nextGeneric).toHaveBeenCalledWith(genericFailure);
   });
 
   it('formats known custom errors', () => {

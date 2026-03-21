@@ -7,6 +7,8 @@ import { DuplicateRecordError } from '../error/duplicate-record-error';
 import { ForeignKeyViolationError } from '../error/foreign-key-violation-error';
 import { NotFoundError } from '../error/not-found-error';
 import { User } from '../entity/user-entity';
+import { ProductRepository } from '../repository/product-repository';
+import { Product } from '../entity/product-entity';
 
 type EntityWithId = ObjectLiteral & { id: string; email?: string };
 
@@ -96,5 +98,15 @@ describe('repositories', () => {
 
     repositoryMock.findOne.mockRejectedValue(new Error('db down'));
     await expect(repository.findByEmail('mail@test.com')).rejects.toBeInstanceOf(DatabaseError);
+  });
+
+  it('keeps product repository bound to the product entity', () => {
+    const repositoryMock = buildRepositoryMock();
+    const dataSource = { getRepository: jest.fn().mockReturnValue(repositoryMock) } as unknown as DataSource;
+
+    const repository = new ProductRepository(dataSource);
+
+    expect(repository).toBeInstanceOf(GenericRepository);
+    expect(dataSource.getRepository).toHaveBeenCalledWith(Product);
   });
 });
