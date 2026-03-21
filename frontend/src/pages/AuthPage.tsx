@@ -41,19 +41,7 @@ const AuthPage: React.FC = () => {
         </div>
 
         <div className="p-4 sm:p-5">
-          <div className="space-y-4">
-            <Alert message={authMessage} variant="success" />
-            {mode === "signin" ? (
-              <SignIn />
-            ) : (
-              <SignUp
-                onRegistered={(message) => {
-                  setAuthMessage(message);
-                  setMode("signin");
-                }}
-              />
-            )}
-          </div>
+          {mode === "signin" ? <SignIn /> : <SignUp onRegistered={() => setMode("signin")} />}
         </div>
       </Card>
     </main>
