@@ -67,8 +67,23 @@ describe('repositories', () => {
     repositoryMock.findOneBy.mockResolvedValue(null);
     await expect(repository.findById('missing')).rejects.toBeInstanceOf(NotFoundError);
 
-    repositoryMock.update.mockRejectedValue(new Error('broken'));
+    repositoryMock.findOneBy.mockRejectedValueOnce(new Error('find broken'));
+    await expect(repository.findById('1')).rejects.toBeInstanceOf(DatabaseError);
+
+    repositoryMock.update.mockResolvedValueOnce({ affected: 0 });
+    await expect(repository.update('1', { id: '1' })).rejects.toBeInstanceOf(NotFoundError);
+
+    repositoryMock.update.mockRejectedValueOnce(new Error('broken'));
     await expect(repository.update('1', { id: '1' })).rejects.toBeInstanceOf(DatabaseError);
+
+    repositoryMock.delete.mockResolvedValueOnce({ affected: 0 });
+    await expect(repository.delete('1')).rejects.toBeInstanceOf(NotFoundError);
+
+    repositoryMock.delete.mockRejectedValueOnce(new Error('delete broken'));
+    await expect(repository.delete('1')).rejects.toBeInstanceOf(DatabaseError);
+
+    repositoryMock.findAndCount.mockRejectedValueOnce(new Error('list broken'));
+    await expect(repository.findAll(1, 10)).rejects.toBeInstanceOf(DatabaseError);
   });
 
   it('finds users by email and wraps query failures', async () => {
