@@ -15,6 +15,7 @@ export type Response<TData = unknown> = {
   _timeStamp: string;
   _statusCode: number;
   _status: string;
+  _message?: string;
   _data: TData;
 };
 

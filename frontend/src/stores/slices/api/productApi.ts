@@ -5,6 +5,7 @@ import { Product } from '../../../types/Product';
 
 export const productApi = createApi({
     reducerPath: 'productApi',
+    tagTypes: ['Product'],
     baseQuery: fetchBaseQuery({
         baseUrl: BASE_API,
         prepareHeaders: (headers) => {
@@ -24,6 +25,7 @@ export const productApi = createApi({
                 method: 'POST',
                 body: productData,
             }),
+            invalidatesTags: ['Product'],
         }),
         updateProduct: builder.mutation<Response, Product>({
             query: (productData: Product) => ({
@@ -31,24 +33,28 @@ export const productApi = createApi({
                 method: 'PUT',
                 body: productData,
             }),
+            invalidatesTags: ['Product'],
         }),
-        getProduct: builder.query<Response[], void>({
+        getProduct: builder.query<Response<Product[]> | Response<Product>[], void>({
             query: () => ({
                 url: '/api/product',
                 method: 'GET',
-            })
+            }),
+            providesTags: ['Product'],
         }),
-        getProductById: builder.query<Response, string>({
+        getProductById: builder.query<Response<Product>, string>({
             query: (id: string) => ({
                 url: `/api/product/${id}`,
                 method: 'GET',
-            })
+            }),
+            providesTags: ['Product'],
         }),
-        deleteProduct: builder.mutation<Response, string>({
+        deleteProduct: builder.mutation<Response<{ id?: string }>, string>({
             query: (id: string) => ({
                 url: `/api/product/${id}`,
                 method: 'DELETE',
-            })
+            }),
+            invalidatesTags: ['Product'],
         })
     }),
 });
