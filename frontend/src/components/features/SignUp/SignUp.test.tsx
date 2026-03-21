@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
+import { MemoryRouter } from "react-router-dom";
 import { authApi } from "../../../stores/slices/api/authApi";
 import SignUp from "./SignUp";
 
@@ -14,7 +15,9 @@ const store = configureStore({
 const renderSignUp = () =>
   render(
     <Provider store={store}>
-      <SignUp />
+      <MemoryRouter>
+        <SignUp />
+      </MemoryRouter>
     </Provider>
   );
 
@@ -25,14 +28,14 @@ describe("SignUp", () => {
     expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/username/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /sign up/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /create account/i })).toBeInTheDocument();
   });
 
   it("shows validation errors on empty submit", async () => {
     const user = userEvent.setup();
     renderSignUp();
 
-    await user.click(screen.getByRole("button", { name: /sign up/i }));
+    await user.click(screen.getByRole("button", { name: /create account/i }));
 
     expect(screen.getAllByText("Este campo es obligatorio")).toHaveLength(3);
   });

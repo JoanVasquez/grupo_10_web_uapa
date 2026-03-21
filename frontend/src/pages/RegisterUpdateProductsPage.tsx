@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Section, DynamicForm as ProductForm } from "../components/index";
+import { Alert, Section, DynamicForm as ProductForm } from "../components";
 import { Product } from "../types/Product";
 import { FormField } from "../types/FormField";
 import { validate } from "../utils/validation";
 import { useCreateProductMutation } from "../stores/slices/api/productApi";
 import { Response } from "../types/Response";
+import { useNavigate } from "react-router-dom";
 
 const PRODUCT_FIELDS: FormField[] = [
   {
@@ -82,6 +83,7 @@ const PRODUCT_FIELDS: FormField[] = [
 ];
 
 const RegisterProductsPage: React.FC = () => {
+  const navigate = useNavigate();
   const [values, setValues] = useState<Product>({
     code: "",
     name: "",
@@ -94,11 +96,9 @@ const RegisterProductsPage: React.FC = () => {
   });
 
   const [errors, setErrors] = useState<Partial<Record<keyof Product, string>>>({});
-  const [
-    createProduct,
-    { error }
-    // { isLoading, isSuccess, isError, error }
-  ] = useCreateProductMutation();
+  const [submitError, setSubmitError] = useState("");
+  const [submitSuccess, setSubmitSuccess] = useState("");
+  const [createProduct] = useCreateProductMutation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -112,23 +112,39 @@ const RegisterProductsPage: React.FC = () => {
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
-      const response: Response = await createProduct(values as Product).unwrap();
-      console.log(response);
-      // if (response._statusCode === 201) {
-      //   console.log(response);
-      //   localStorage.setItem("products", JSON.stringify(values));
-      //   handleReset();
-      // }
+      try {
+        const response: Response = await createProduct(values as Product).unwrap();
 
+        if (response._statusCode === 201) {
+          handleReset();
+          setSubmitSuccess("Producto creado correctamente.");
+          setSubmitError("");
+        }
+      } catch (error) {
+        const status = typeof error === "object" && error !== null && "status" in error ? error.status : undefined;
+        const data =
+          typeof error === "object" && error !== null && "data" in error ? error.data : undefined;
+        const message =
+          typeof data === "object" && data !== null && "_message" in data ? data._message : undefined;
+
+        if (status === 403 && typeof message === "string" && message.includes("expired token")) {
+          localStorage.removeItem("token");
+          navigate("/", { replace: true });
+          return;
+        }
+
+        setSubmitError(typeof message === "string" ? message : "No se pudo guardar el producto.");
+        setSubmitSuccess("");
+      }
     }
   };
-
-  console.log(error)
 
   const handleChange = <K extends keyof Product>(id: K, value: Product[K]) => {
     setValues((prev) => ({ ...prev, [id]: value }));
     const error = validate(id, value, PRODUCT_FIELDS);
     setErrors((prev) => ({ ...prev, [id]: error }));
+    setSubmitError("");
+    setSubmitSuccess("");
   };
 
   const handleReset = () => {
@@ -143,6 +159,8 @@ const RegisterProductsPage: React.FC = () => {
       stock: 0,
     });
     setErrors({});
+    setSubmitError("");
+    setSubmitSuccess("");
   };
 
   return (
@@ -150,18 +168,23 @@ const RegisterProductsPage: React.FC = () => {
       title="Registrar productos"
       headingLevel={1}
     >
-      <ProductForm
-        fields={PRODUCT_FIELDS}
-        handleChange={handleChange}
-        onSubmit={handleSubmit}
-        submitLabel="Guardar producto"
-        resetLabel="Limpiar"
-        ariaLabel="Formulario de registro de productos"
-        values={values}
-        errors={errors}
-        onReset={handleReset}
-        columns={2}
-      />
+      <div className="space-y-4">
+        <Alert message={submitSuccess} variant="success" />
+        <Alert message={submitError} variant="error" />
+
+        <ProductForm
+          fields={PRODUCT_FIELDS}
+          handleChange={handleChange}
+          onSubmit={handleSubmit}
+          submitLabel="Guardar producto"
+          resetLabel="Limpiar"
+          ariaLabel="Formulario de registro de productos"
+          values={values}
+          errors={errors}
+          onReset={handleReset}
+          columns={2}
+        />
+      </div>
     </Section>
   );
 };
