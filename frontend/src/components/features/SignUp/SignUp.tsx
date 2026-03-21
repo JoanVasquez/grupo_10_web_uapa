@@ -7,7 +7,8 @@ type SignUpProps = {
 };
 
 const SignUp: React.FC<SignUpProps> = ({ onRegistered }) => {
-  const { errors, handleChange, handleReset, handleSubmit, submitError, values } = useSignUpForm({ onRegistered });
+  const formOptions = onRegistered ? { onRegistered } : undefined;
+  const { errors, handleChange, handleReset, handleSubmit, submitError, values } = useSignUpForm(formOptions);
 
   return (
     <div className="space-y-4">
