@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { Alert, Card, SignIn, SignUp } from "../components";
+import { Card, SignIn, SignUp } from "../components";
 
 const AuthPage: React.FC = () => {
   const [mode, setMode] = useState<"signin" | "signup">("signin");
-  const [authMessage, setAuthMessage] = useState("");
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-slate-100 px-4">
@@ -13,7 +12,6 @@ const AuthPage: React.FC = () => {
             type="button"
             onClick={() => {
               setMode("signin");
-              setAuthMessage("");
             }}
             className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
               mode === "signin"
@@ -28,7 +26,6 @@ const AuthPage: React.FC = () => {
             type="button"
             onClick={() => {
               setMode("signup");
-              setAuthMessage("");
             }}
             className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
               mode === "signup"

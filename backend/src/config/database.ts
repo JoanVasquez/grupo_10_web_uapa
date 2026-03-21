@@ -5,6 +5,16 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 
 let appDataSource: DataSource | null = null;
 
+function getRequiredEnv(name: string): string {
+  const value = process.env[name];
+
+  if (!value) {
+    throw new BaseAppException(`Missing required environment variable: ${name}`);
+  }
+
+  return value;
+}
+
 export async function getAppDataSource(): Promise<DataSource> {
   if (appDataSource?.isInitialized) {
     return appDataSource;
@@ -23,11 +33,11 @@ export async function getAppDataSource(): Promise<DataSource> {
     try {
       dataSourceOptions = {
         type: 'postgres',
-        host: process.env.DATABASE_HOST,
+        host: getRequiredEnv('DATABASE_HOST'),
         port: parseInt(process.env.DATABASE_PORT ?? '5432', 10),
-        username: process.env.DATABASE_USERNAME,
-        password: process.env.DATABASE_PASSWORD,
-        database: process.env.DATABASE_NAME,
+        username: getRequiredEnv('DATABASE_USERNAME'),
+        password: getRequiredEnv('DATABASE_PASSWORD'),
+        database: getRequiredEnv('DATABASE_NAME'),
         entities: [User, Product],
         synchronize: true,
       };

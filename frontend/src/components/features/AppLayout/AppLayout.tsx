@@ -21,7 +21,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ sidebarTitle, headerActions, avat
           <DashBoard
             sidebarTitle={sidebarTitle}
             headerActions={headerActions}
-            avatar={avatar}
+            {...(avatar ? { avatar } : {})}
           />
         }
       />

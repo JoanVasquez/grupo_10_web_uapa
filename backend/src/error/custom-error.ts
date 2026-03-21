@@ -1,7 +1,7 @@
 export abstract class CustomError extends Error {
   public statusCode: number;
   public status: string;
-  public message: string;
+  public override message: string;
 
   constructor(statusCode: number, status: string, message: string) {
     super(message);

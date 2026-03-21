@@ -38,7 +38,7 @@ const DashBoard: React.FC<DashboardProps> = ({
       <div className="min-h-screen md:ml-[270px]">
         <Header
           actions={headerActions}
-          avatar={avatar}
+          {...(avatar ? { avatar } : {})}
           onMenuClick={() => setSidebarOpen((prev) => !prev)}
         />
 

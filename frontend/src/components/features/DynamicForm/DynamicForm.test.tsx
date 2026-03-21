@@ -47,8 +47,8 @@ const TestForm: React.FC<TestFormProps> = ({
       fields={fields}
       onSubmit={onSubmit}
       onReset={handleReset}
-      submitLabel={submitLabel}
-      resetLabel={resetLabel}
+      {...(submitLabel ? { submitLabel } : {})}
+      {...(resetLabel ? { resetLabel } : {})}
       handleChange={handleChange}
       values={values}
     />
