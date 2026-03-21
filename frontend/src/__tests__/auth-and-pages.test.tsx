@@ -2,14 +2,19 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import AuthPage from '../pages/AuthPage';
 import RegisterProductsPage from '../pages/RegisterUpdateProductsPage';
+import ProductsTablePage from '../pages/ProductsTablePage';
 import { authApi } from '../stores/slices/api/authApi';
 import { productApi } from '../stores/slices/api/productApi';
 
 const registerMock = vi.fn();
 const createProductMock = vi.fn();
+const updateProductMock = vi.fn();
+const deleteProductMock = vi.fn();
+const getProductByIdMock = vi.fn();
+const getProductQueryMock = vi.fn();
 const navigateMock = vi.fn();
 
 vi.mock('../stores/slices/api/authApi', async () => {
@@ -27,6 +32,10 @@ vi.mock('../stores/slices/api/productApi', async () => {
   return {
     ...actual,
     useCreateProductMutation: () => [createProductMock],
+    useUpdateProductMutation: () => [updateProductMock],
+    useDeleteProductMutation: () => [deleteProductMock],
+    useGetProductByIdQuery: (...args: unknown[]) => getProductByIdMock(...args),
+    useGetProductQuery: () => getProductQueryMock(),
     productApi: actual.productApi,
   };
 });
@@ -49,10 +58,10 @@ const buildStore = () =>
       getDefaultMiddleware().concat(authApi.middleware, productApi.middleware),
   });
 
-const renderWithProviders = (ui: React.ReactElement) =>
+const renderWithProviders = (ui: React.ReactElement, initialEntries = ['/']) =>
   render(
     <Provider store={buildStore()}>
-      <MemoryRouter>{ui}</MemoryRouter>
+      <MemoryRouter initialEntries={initialEntries}>{ui}</MemoryRouter>
     </Provider>,
   );
 
@@ -61,7 +70,13 @@ describe('auth and page flows', () => {
     localStorage.clear();
     registerMock.mockReset();
     createProductMock.mockReset();
+    updateProductMock.mockReset();
+    deleteProductMock.mockReset();
+    getProductByIdMock.mockReset();
+    getProductQueryMock.mockReset();
     navigateMock.mockReset();
+    getProductByIdMock.mockReturnValue({ data: undefined, isLoading: false });
+    getProductQueryMock.mockReturnValue({ data: { _data: [] }, isLoading: false, refetch: vi.fn() });
   });
 
   it('switches auth page between sign in and sign up modes', async () => {
@@ -91,6 +106,83 @@ describe('auth and page flows', () => {
     await user.click(screen.getByRole('button', { name: /guardar producto/i }));
 
     expect(await screen.findByText('Producto registrado correctamente.')).toBeInTheDocument();
+  });
+
+  it('updates a product when there is an id in the route', async () => {
+    const user = userEvent.setup();
+    getProductByIdMock.mockReturnValue({
+      data: {
+        _statusCode: 200,
+        _status: 'OK',
+        _timeStamp: 'now',
+        _data: { id: '1', code: 'ABC', name: 'Tablet', price: 10, description: '', category: 'Audio', brand: 'Sony', model: 'X1', stock: 3 },
+      },
+      isLoading: false,
+    });
+    updateProductMock.mockReturnValue({
+      unwrap: () => Promise.resolve({ _statusCode: 200, _status: 'OK', _timeStamp: 'now', _data: null }),
+    });
+
+    renderWithProviders(
+      <Routes>
+        <Route path="/dashboard/form/:id" element={<RegisterProductsPage />} />
+      </Routes>,
+      ['/dashboard/form/1'],
+    );
+
+    const nameInput = await screen.findByLabelText('Nombre');
+    expect(nameInput).toHaveValue('Tablet');
+    await user.clear(nameInput);
+    await user.type(nameInput, 'Laptop');
+    await user.click(screen.getByRole('button', { name: /actualizar producto/i }));
+
+    expect(updateProductMock).toHaveBeenCalled();
+    expect(await screen.findByText('Producto actualizado correctamente.')).toBeInTheDocument();
+  });
+
+  it('renders products in the dynamic table and navigates to edit', async () => {
+    const user = userEvent.setup();
+    getProductQueryMock.mockReturnValue({
+      data: {
+        _statusCode: 200,
+        _status: 'OK',
+        _timeStamp: 'now',
+        _data: [{ id: '1', code: 'ABC', name: 'Tablet', price: 10, description: '', category: 'Audio', brand: 'Sony', model: 'X1', stock: 3 }],
+      },
+      isLoading: false,
+      refetch: vi.fn(),
+    });
+
+    renderWithProviders(<ProductsTablePage />);
+
+    expect(screen.getByText('Tablet')).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: /editar/i }));
+    expect(navigateMock).toHaveBeenCalledWith('/dashboard/form/1');
+  });
+
+  it('deletes a product from the dynamic table', async () => {
+    const user = userEvent.setup();
+    const refetchMock = vi.fn();
+    getProductQueryMock.mockReturnValue({
+      data: {
+        _statusCode: 200,
+        _status: 'OK',
+        _timeStamp: 'now',
+        _data: [{ id: '1', code: 'ABC', name: 'Tablet', price: 10, description: '', category: 'Audio', brand: 'Sony', model: 'X1', stock: 3 }],
+      },
+      isLoading: false,
+      refetch: refetchMock,
+    });
+    deleteProductMock.mockReturnValue({
+      unwrap: () => Promise.resolve({ _statusCode: 200, _status: 'OK', _timeStamp: 'now', _message: 'Producto eliminado.', _data: null }),
+    });
+
+    renderWithProviders(<ProductsTablePage />);
+
+    await user.click(screen.getByRole('button', { name: /eliminar/i }));
+    expect(deleteProductMock).toHaveBeenCalledWith('1');
+    expect(refetchMock).toHaveBeenCalled();
+    expect(await screen.findByText('Producto eliminado.')).toBeInTheDocument();
   });
 
   it('redirects to login when product creation reports an expired token', async () => {

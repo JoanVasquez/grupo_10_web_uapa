@@ -1,5 +1,5 @@
 export type Product = {
-  // id?: number;
+  id?: string | number;
   code: string;
   name: string;
   price: number;
@@ -8,5 +8,4 @@ export type Product = {
   brand: string;
   model: string;
   stock: number;
-  // [key: string]: string | number | boolean | undefined;
 };

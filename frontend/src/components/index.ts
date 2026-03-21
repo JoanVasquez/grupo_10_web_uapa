@@ -12,3 +12,5 @@ export { default as SignUp } from "./features/SignUp/SignUp";
 export { default as SignIn } from "./features/SignIn/SignIn";
 export { default as Card } from "./common/Card/Card";
 export { default as DashBoard } from "./features/DashBoard/DashBoard";
+
+export { default as DynamicDataTable } from "./features/DynamicDataTable/DynamicDataTable";

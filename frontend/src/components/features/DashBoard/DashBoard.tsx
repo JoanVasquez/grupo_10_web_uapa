@@ -3,6 +3,7 @@ import { Route, Routes, useNavigate } from "react-router-dom";
 import { Sidebar, Header } from "../../index";
 import { HeaderAction } from "../Header/Header";
 import RegisterProductsPage from "../../../pages/RegisterUpdateProductsPage";
+import ProductsTablePage from "../../../pages/ProductsTablePage";
 
 interface DashboardProps {
   sidebarTitle: string;
@@ -46,7 +47,10 @@ const DashBoard: React.FC<DashboardProps> = ({
           <div className="mx-auto max-w-5xl">
             <div className="rounded-[28px] border border-slate-200 bg-white p-4 shadow-sm sm:p-6 lg:p-8">
               <Routes>
-                <Route path="/" element={<RegisterProductsPage />} />
+                <Route path="/" element={<ProductsTablePage />} />
+                <Route path="/form" element={<RegisterProductsPage />} />
+                <Route path="/form/:id" element={<RegisterProductsPage />} />
+                <Route path="/table" element={<ProductsTablePage />} />
               </Routes>
             </div>
           </div>
