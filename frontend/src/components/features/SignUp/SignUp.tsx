@@ -5,6 +5,7 @@ import { User } from "../../../types/User";
 import { validate } from "../../../utils/validation";
 import { useRegisterMutation } from "../../../stores/slices/api/authApi";
 import { useNavigate } from "react-router-dom";
+import { Alert } from "../../index";
 
 type SignUpForm = Omit<User, "id" | "is_active">;
 

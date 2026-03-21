@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Section, DynamicForm as ProductForm } from "../components/index";
+import { Section, DynamicForm as ProductForm, Alert } from "../components/index";
 import { Product } from "../types/Product";
 import { FormField } from "../types/FormField";
 import { validate } from "../utils/validation";
@@ -135,6 +135,8 @@ const RegisterProductsPage: React.FC = () => {
     setValues((prev) => ({ ...prev, [id]: value }));
     const error = validate(id, value, PRODUCT_FIELDS);
     setErrors((prev) => ({ ...prev, [id]: error }));
+    setSubmitError("");
+    setSubmitSuccess("");
   };
 
   const handleReset = () => {
@@ -149,6 +151,7 @@ const RegisterProductsPage: React.FC = () => {
       stock: 0,
     });
     setErrors({});
+    setSubmitError("");
   };
 
   return (
@@ -156,6 +159,10 @@ const RegisterProductsPage: React.FC = () => {
       title="Registrar productos"
       headingLevel={1}
     >
+      <div className="space-y-4">
+        <Alert message={submitSuccess} variant="success" />
+        <Alert message={submitError} variant="error" />
+
       <ProductForm
         fields={PRODUCT_FIELDS}
         handleChange={handleChange}
@@ -168,6 +175,7 @@ const RegisterProductsPage: React.FC = () => {
         onReset={handleReset}
         columns={2}
       />
+      </div>
     </Section>
   );
 };
