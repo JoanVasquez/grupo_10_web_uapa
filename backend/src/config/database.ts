@@ -5,11 +5,23 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 
 let appDataSource: DataSource | null = null;
 
-function getRequiredEnv(name: string): string {
-  const value = process.env[name];
+function getEnvValue(names: string[], fallback?: string): string | undefined {
+  for (const name of names) {
+    const value = process.env[name];
+
+    if (value) {
+      return value;
+    }
+  }
+
+  return fallback;
+}
+
+function getRequiredEnv(names: string[], fallback?: string): string {
+  const value = getEnvValue(names, fallback);
 
   if (!value) {
-    throw new BaseAppException(`Missing required environment variable: ${name}`);
+    throw new BaseAppException(`Missing required environment variable: ${names.join(" or ")}`);
   }
 
   return value;
@@ -33,11 +45,11 @@ export async function getAppDataSource(): Promise<DataSource> {
     try {
       dataSourceOptions = {
         type: 'postgres',
-        host: getRequiredEnv('DATABASE_HOST'),
-        port: parseInt(process.env.DATABASE_PORT ?? '5432', 10),
-        username: getRequiredEnv('DATABASE_USERNAME'),
-        password: getRequiredEnv('DATABASE_PASSWORD'),
-        database: getRequiredEnv('DATABASE_NAME'),
+        host: getRequiredEnv(['DATABASE_HOST', 'DB_HOST'], 'localhost'),
+        port: parseInt(getEnvValue(['DATABASE_PORT', 'DB_PORT'], '5432') ?? '5432', 10),
+        username: getRequiredEnv(['DATABASE_USERNAME', 'DB_USER']),
+        password: getRequiredEnv(['DATABASE_PASSWORD', 'DB_PASSWORD']),
+        database: getRequiredEnv(['DATABASE_NAME', 'DB_NAME']),
         entities: [User, Product],
         synchronize: true,
       };
