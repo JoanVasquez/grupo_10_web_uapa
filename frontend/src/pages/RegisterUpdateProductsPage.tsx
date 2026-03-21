@@ -5,6 +5,7 @@ import { FormField } from "../types/FormField";
 import { validate } from "../utils/validation";
 import { useCreateProductMutation } from "../stores/slices/api/productApi";
 import { Response } from "../types/Response";
+import { useNavigate } from "react-router-dom";
 
 const PRODUCT_FIELDS: FormField[] = [
   {
@@ -82,6 +83,7 @@ const PRODUCT_FIELDS: FormField[] = [
 ];
 
 const RegisterProductsPage: React.FC = () => {
+  const navigate = useNavigate();
   const [values, setValues] = useState<Product>({
     code: "",
     name: "",
@@ -94,11 +96,7 @@ const RegisterProductsPage: React.FC = () => {
   });
 
   const [errors, setErrors] = useState<Partial<Record<keyof Product, string>>>({});
-  const [
-    createProduct,
-    { error }
-    // { isLoading, isSuccess, isError, error }
-  ] = useCreateProductMutation();
+  const [createProduct] = useCreateProductMutation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -112,18 +110,26 @@ const RegisterProductsPage: React.FC = () => {
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
-      const response: Response = await createProduct(values as Product).unwrap();
-      console.log(response);
-      // if (response._statusCode === 201) {
-      //   console.log(response);
-      //   localStorage.setItem("products", JSON.stringify(values));
-      //   handleReset();
-      // }
+      try {
+        const response: Response = await createProduct(values as Product).unwrap();
 
+        if (response._statusCode === 201) {
+          handleReset();
+        }
+      } catch (error) {
+        const status = typeof error === "object" && error !== null && "status" in error ? error.status : undefined;
+        const data =
+          typeof error === "object" && error !== null && "data" in error ? error.data : undefined;
+        const message =
+          typeof data === "object" && data !== null && "_message" in data ? data._message : undefined;
+
+        if (status === 403 && typeof message === "string" && message.includes("expired token")) {
+          localStorage.removeItem("token");
+          navigate("/", { replace: true });
+        }
+      }
     }
   };
-
-  console.log(error)
 
   const handleChange = <K extends keyof Product>(id: K, value: Product[K]) => {
     setValues((prev) => ({ ...prev, [id]: value }));
