@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
+import jwt, { JsonWebTokenError, NotBeforeError, TokenExpiredError } from "jsonwebtoken";
 import { AuthError } from "../error/auth-error";
 import { AuthedUser } from "../types/AuthedUser";
 import { jwtSecrete } from "../utils/constants";
@@ -23,7 +23,7 @@ export const authenticateToken = async (
 
   try {
     if (!token) {
-      new AuthError("Unauthorized: No token provided");
+      throw new AuthError("Unauthorized: No token provided");
     }
 
     const decoded = jwt.verify(token, jwtSecret) as AuthedUser;
@@ -34,6 +34,15 @@ export const authenticateToken = async (
 
     next();
   } catch (error) {
+    if (
+      error instanceof TokenExpiredError ||
+      error instanceof JsonWebTokenError ||
+      error instanceof NotBeforeError
+    ) {
+      next(new AuthError("Unauthorized: Invalid or expired token"));
+      return;
+    }
+
     next(error);
   }
 };

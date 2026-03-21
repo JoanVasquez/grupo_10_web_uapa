@@ -8,6 +8,10 @@ import { useNavigate } from "react-router-dom";
 
 type SignUpForm = Omit<User, "id" | "is_active">;
 
+type SignUpProps = {
+  onRegistered?: () => void;
+};
+
 const SIGNUP_FIELDS: FormField[] = [
   { id: "email", label: "Email", type: "email", placeholder: "you@example.com", required: true },
   { id: "username", label: "Username", type: "text", placeholder: "username", required: true, minLength: 2, maxLength: 8 },
@@ -16,9 +20,10 @@ const SIGNUP_FIELDS: FormField[] = [
 
 const INITIAL_VALUES: SignUpForm = { email: "", username: "", password: "" };
 
-const SignUp: React.FC = () => {
+const SignUp: React.FC<SignUpProps> = ({ onRegistered }) => {
   const [values, setValues] = useState<SignUpForm>(INITIAL_VALUES);
   const [errors, setErrors] = useState<Partial<Record<keyof SignUpForm, string>>>({});
+  const [submitError, setSubmitError] = useState<string>("");
   const [register] = useRegisterMutation();
   const navigate = useNavigate();
 
@@ -26,6 +31,7 @@ const SignUp: React.FC = () => {
     setValues((prev) => ({ ...prev, [id]: value }));
     const error = validate(id, value, SIGNUP_FIELDS);
     setErrors((prev) => ({ ...prev, [id]: error }));
+    setSubmitError("");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -39,8 +45,24 @@ const SignUp: React.FC = () => {
 
     setErrors(newErrors);
     if (Object.keys(newErrors).length === 0) {
-      await register(values as User);
-      handleReset();
+      try {
+        await register(values as User).unwrap();
+        handleReset();
+        onRegistered?.();
+      } catch (error) {
+        const status = typeof error === "object" && error !== null && "status" in error ? error.status : undefined;
+        const data =
+          typeof error === "object" && error !== null && "data" in error ? error.data : undefined;
+        const message =
+          typeof data === "object" && data !== null && "_message" in data ? data._message : undefined;
+
+        if (status === 409) {
+          setSubmitError(typeof message === "string" ? message : "Ya existe una cuenta con ese correo.");
+          return;
+        }
+
+        setSubmitError("No se pudo crear la cuenta. Inténtalo de nuevo.");
+      }
     }
   };
 
@@ -57,18 +79,26 @@ const SignUp: React.FC = () => {
   }, []);
 
   return (
-    <DynamicForm
-      fields={SIGNUP_FIELDS}
-      handleChange={handleChange}
-      onSubmit={handleSubmit}
-      onReset={handleReset}
-      submitLabel="Create account"
-      resetLabel="Clear"
-      ariaLabel="Sign up form"
-      values={values}
-      errors={errors}
-      columns={1}
-    />
+    <div className="space-y-4">
+      {submitError ? (
+        <p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+          {submitError}
+        </p>
+      ) : null}
+
+      <DynamicForm
+        fields={SIGNUP_FIELDS}
+        handleChange={handleChange}
+        onSubmit={handleSubmit}
+        onReset={handleReset}
+        submitLabel="Create account"
+        resetLabel="Clear"
+        ariaLabel="Sign up form"
+        values={values}
+        errors={errors}
+        columns={1}
+      />
+    </div>
   );
 };
 

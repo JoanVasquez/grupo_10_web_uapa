@@ -5,7 +5,18 @@ import { Product } from '../../../types/Product';
 
 export const productApi = createApi({
     reducerPath: 'productApi',
-    baseQuery: fetchBaseQuery({ baseUrl: BASE_API }),
+    baseQuery: fetchBaseQuery({
+        baseUrl: BASE_API,
+        prepareHeaders: (headers) => {
+            const token = localStorage.getItem('token');
+
+            if (token) {
+                headers.set('authorization', `Bearer ${token}`);
+            }
+
+            return headers;
+        },
+    }),
     endpoints: (builder) => ({
         createProduct: builder.mutation<Response, Product>({
             query: (productData: Product) => ({

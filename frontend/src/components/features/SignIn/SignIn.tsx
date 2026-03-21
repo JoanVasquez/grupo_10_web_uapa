@@ -40,6 +40,7 @@ const SignIn: React.FC = () => {
       const response: Login = await login(values).unwrap();
       localStorage.setItem('token', response._data.token)
       handleReset();
+      navigate('/dashboard', { replace: true });
     }
   };
 
@@ -51,9 +52,9 @@ const SignIn: React.FC = () => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      navigate('/dashboard');
+      navigate('/dashboard', { replace: true });
     }
-  }, []);
+  }, [navigate]);
 
   return (
     <DynamicForm

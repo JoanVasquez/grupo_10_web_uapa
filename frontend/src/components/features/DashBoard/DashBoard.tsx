@@ -23,7 +23,7 @@ const DashBoard: React.FC<DashboardProps> = ({
     const token = localStorage.getItem("token");
 
     if (!token) {
-      navigate("/login", { replace: true });
+      navigate("/", { replace: true });
     }
   }, [navigate]);
 
