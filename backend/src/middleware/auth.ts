@@ -23,7 +23,7 @@ export const authenticateToken = async (
 
   try {
     if (!token) {
-      new AuthError("Unauthorized: No token provided");
+      throw new AuthError("Unauthorized: No token provided");
     }
 
     const decoded = jwt.verify(token, jwtSecret) as AuthedUser;
