@@ -1,5 +1,21 @@
 # Grupo 10 Web UAPA · Documentación General
 
+## Colaboración del equipo
+
+Este proyecto fue desarrollado de manera colaborativa por el equipo **Grupo 10 Web UAPA**.
+
+### Participantes
+
+- Sarai Rodríguez Santos
+- Alan Edberg Cabrera Gómez
+- Yanely de Jesús Ledesma Vega
+- Fraulyn Anerky Ramírez Aguero
+- Miguel Angel Rodríguez Díaz
+- José Eladio Santana Fernández
+- Joan Manuel Vásquez Rodríguez
+
+---
+
 ## Descripción del proyecto
 
 Este repositorio contiene una aplicación web full stack para autenticación de usuarios y gestión de productos. La solución está dividida en dos aplicaciones independientes pero coordinadas:
@@ -225,19 +241,6 @@ npm run build
 
 ---
 
-## Colaboración del equipo
-
-Este proyecto fue desarrollado de manera colaborativa por el equipo **Grupo 10 Web UAPA**.
-
-### Participantes
-
-- Sarai Rodríguez Santos
-- Alan Edberg Cabrera Gómez
-- Yanely de Jesús Ledesma Vega
-- Fraulyn Anerky Ramírez Aguero
-- Miguel Angel Rodríguez Díaz
-- José Eladio Santana Fernández
-- Joan Manuel Vásquez Rodríguez
 
 ### Enfoque de colaboración recomendado/documentado
 
