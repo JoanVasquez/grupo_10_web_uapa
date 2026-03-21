@@ -10,7 +10,7 @@ import { Alert } from "../../index";
 type SignUpForm = Omit<User, "id" | "is_active">;
 
 type SignUpProps = {
-  onRegistered?: (message: string) => void;
+  onRegistered?: () => void;
 };
 
 const SIGNUP_FIELDS: FormField[] = [
@@ -49,7 +49,7 @@ const SignUp: React.FC<SignUpProps> = ({ onRegistered }) => {
       try {
         await register(values as User).unwrap();
         handleReset();
-        onRegistered?.("Cuenta creada correctamente. Ahora puedes iniciar sesión.");
+        onRegistered?.();
       } catch (error) {
         const status = typeof error === "object" && error !== null && "status" in error ? error.status : undefined;
         const data =
@@ -81,7 +81,11 @@ const SignUp: React.FC<SignUpProps> = ({ onRegistered }) => {
 
   return (
     <div className="space-y-4">
-      <Alert message={submitError} variant="error" />
+      {submitError ? (
+        <p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+          {submitError}
+        </p>
+      ) : null}
 
       <DynamicForm
         fields={SIGNUP_FIELDS}

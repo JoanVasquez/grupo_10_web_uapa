@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import { Section, DynamicForm as ProductForm } from "../components/index";
+import { Section, DynamicForm as ProductForm, Alert } from "../components/index";
 import { Product } from "../types/Product";
 import { FormField } from "../types/FormField";
 import { validate } from "../utils/validation";
 import { useCreateProductMutation } from "../stores/slices/api/productApi";
 import { Response } from "../types/Response";
 import { useNavigate } from "react-router-dom";
-import { Alert } from "../components";
 
 const PRODUCT_FIELDS: FormField[] = [
   {
@@ -97,8 +96,6 @@ const RegisterProductsPage: React.FC = () => {
   });
 
   const [errors, setErrors] = useState<Partial<Record<keyof Product, string>>>({});
-  const [submitError, setSubmitError] = useState("");
-  const [submitSuccess, setSubmitSuccess] = useState("");
   const [createProduct] = useCreateProductMutation();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -118,8 +115,6 @@ const RegisterProductsPage: React.FC = () => {
 
         if (response._statusCode === 201) {
           handleReset();
-          setSubmitSuccess("Producto creado correctamente.");
-          setSubmitError("");
         }
       } catch (error) {
         const status = typeof error === "object" && error !== null && "status" in error ? error.status : undefined;
@@ -131,11 +126,7 @@ const RegisterProductsPage: React.FC = () => {
         if (status === 403 && typeof message === "string" && message.includes("expired token")) {
           localStorage.removeItem("token");
           navigate("/", { replace: true });
-          return;
         }
-
-        setSubmitError(typeof message === "string" ? message : "No se pudo guardar el producto.");
-        setSubmitSuccess("");
       }
     }
   };

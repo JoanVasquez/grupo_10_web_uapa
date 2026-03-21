@@ -40,19 +40,10 @@ const SignIn: React.FC = () => {
 
     setErrors(newErrors);
     if (Object.keys(newErrors).length === 0) {
-      try {
-        const response: Login = await login(values).unwrap();
-        localStorage.setItem('token', response._data.token)
-        handleReset();
-        navigate('/dashboard', { replace: true });
-      } catch (error) {
-        const data =
-          typeof error === "object" && error !== null && "data" in error ? error.data : undefined;
-        const message =
-          typeof data === "object" && data !== null && "_message" in data ? data._message : undefined;
-
-        setSubmitError(typeof message === "string" ? message : "No se pudo iniciar sesión.");
-      }
+      const response: Login = await login(values).unwrap();
+      localStorage.setItem('token', response._data.token)
+      handleReset();
+      navigate('/dashboard', { replace: true });
     }
   };
 
