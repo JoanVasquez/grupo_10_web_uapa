@@ -30,8 +30,12 @@ function DynamicDataTable<T>({
 
   return (
     <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+      <div className="border-b border-slate-100 bg-slate-50 px-4 py-3 text-xs font-medium uppercase tracking-[0.2em] text-slate-500 md:hidden">
+        Desliza para ver todos los campos
+      </div>
+
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-slate-200">
+        <table className="min-w-[720px] w-full divide-y divide-slate-200">
           <thead className="bg-slate-50">
             <tr>
               {columns.map((column) => (
@@ -72,22 +76,22 @@ function DynamicDataTable<T>({
               </tr>
             ) : (
               data.map((row) => (
-                <tr key={getRowId(row)} className="hover:bg-slate-50">
+                <tr key={getRowId(row)} className="align-top hover:bg-slate-50">
                   {columns.map((column) => (
-                    <td key={String(column.key)} className="whitespace-nowrap px-4 py-4 text-sm text-slate-700">
+                    <td key={String(column.key)} className="px-4 py-4 text-sm text-slate-700 whitespace-nowrap">
                       {column.render ? column.render(row) : String(row[column.key as keyof T] ?? "-")}
                     </td>
                   ))}
                   {hasActions && (
                     <td className="px-4 py-4">
-                      <div className="flex justify-end gap-2">
+                      <div className="flex min-w-[180px] flex-col justify-end gap-2 sm:flex-row">
                         {onEdit && (
-                          <Button type="button" variant="secondary" size="sm" onClick={() => onEdit(row)}>
+                          <Button type="button" variant="secondary" size="sm" onClick={() => onEdit(row)} className="w-full sm:w-auto">
                             Editar
                           </Button>
                         )}
                         {onDelete && (
-                          <Button type="button" variant="danger" size="sm" onClick={() => onDelete(row)}>
+                          <Button type="button" variant="danger" size="sm" onClick={() => onDelete(row)} className="w-full sm:w-auto">
                             Eliminar
                           </Button>
                         )}

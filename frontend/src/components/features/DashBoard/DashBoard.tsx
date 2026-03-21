@@ -74,14 +74,14 @@ const DashBoard: React.FC<DashboardProps> = ({
   };
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-slate-100">
+    <div className="min-h-screen overflow-x-clip bg-slate-100">
       <Sidebar
         title={sidebarTitle}
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
       />
 
-      <div className="min-h-screen md:ml-[270px]">
+      <div className="min-h-screen md:ml-[250px] lg:ml-[270px]">
         <Header
           actions={headerActions}
           userName={userName}
@@ -90,9 +90,9 @@ const DashBoard: React.FC<DashboardProps> = ({
           onMenuClick={() => setSidebarOpen((prev) => !prev)}
         />
 
-        <main className="px-4 py-5 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-5xl">
-            <div className="rounded-[28px] border border-slate-200 bg-white p-4 shadow-sm sm:p-6 lg:p-8">
+        <main className="px-3 py-4 sm:px-5 sm:py-5 lg:px-8">
+          <div className="mx-auto w-full max-w-6xl">
+            <div className="rounded-[24px] border border-slate-200 bg-white p-3 shadow-sm sm:rounded-[28px] sm:p-5 lg:p-8">
               <Routes>
                 <Route index element={<ProductsTablePage />} />
                 <Route path="form" element={<RegisterProductsPage />} />
@@ -103,7 +103,7 @@ const DashBoard: React.FC<DashboardProps> = ({
           </div>
         </main>
 
-        <footer className="px-4 pb-6 pt-2 text-center text-sm text-slate-400">
+        <footer className="px-4 pb-6 pt-2 text-center text-xs text-slate-400 sm:text-sm">
           &copy; Derechos reservados
         </footer>
       </div>

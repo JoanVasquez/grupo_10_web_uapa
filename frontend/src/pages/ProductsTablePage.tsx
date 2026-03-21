@@ -77,7 +77,11 @@ const ProductsTablePage: React.FC = () => {
   };
 
   return (
-    <Section title="Listado de productos" headingLevel={1}>
+    <Section
+      title="Listado de productos"
+      subtitle="Consulta, edita y elimina productos desde cualquier tamaño de pantalla."
+      headingLevel={1}
+    >
       <div className="space-y-4">
         <Alert message={feedback?.type === "success" ? feedback.message : ""} variant="success" />
         <Alert message={feedback?.type === "error" ? feedback.message : ""} variant="error" />
