@@ -62,6 +62,16 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   const navContent = (
     <div className="flex h-full flex-col bg-slate-950 text-white">
+      <div className="flex items-center justify-end border-b border-white/10 px-4 py-3 md:hidden">
+        <button
+          type="button"
+          onClick={onClose}
+          className="inline-flex items-center justify-center rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm font-semibold text-slate-200 transition hover:bg-white/10 hover:text-white"
+          aria-label="Cerrar panel lateral"
+        >
+          Cerrar
+        </button>
+      </div>
       <div className="border-b border-white/10 px-4 py-6 sm:px-6 sm:py-8">
         <div className="flex flex-col items-center text-center">
           <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-3xl border border-white/10 bg-white/5 shadow-lg sm:h-20 sm:w-20">
@@ -99,7 +109,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       {isOpen && (
         <button
           type="button"
-          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-[2px] md:hidden"
+          className="fixed inset-0 z-[70] bg-slate-950/55 backdrop-blur-[2px] md:hidden"
           onClick={onClose}
           aria-label="Cerrar menú"
         />
@@ -107,7 +117,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 
       <aside
         className={[
-          "fixed left-0 top-0 z-50 h-screen w-[88vw] max-w-[340px]",
+          "fixed left-0 top-0 z-[80] h-screen w-[88vw] max-w-[340px]",
           "border-r border-slate-800 shadow-2xl md:hidden",
           "transition-transform duration-300 ease-in-out",
           isOpen ? "translate-x-0" : "-translate-x-full",
