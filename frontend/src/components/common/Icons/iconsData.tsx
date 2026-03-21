@@ -29,7 +29,7 @@ export const NAV_ITEMS: NavItem[] = [
         </>
       </Icons>
     ),
-    href: "/",
+    href: "/dashboard",
   },
   {
     label: "Formularios",
@@ -53,7 +53,7 @@ export const NAV_ITEMS: NavItem[] = [
         </>
       </Icons>
     ),
-    href: "/form",
+    href: "/dashboard/form",
     // active: true,
   },
   {
@@ -77,7 +77,7 @@ export const NAV_ITEMS: NavItem[] = [
         </>
       </Icons>
     ),
-    href: "/table",
+    href: "/dashboard/table",
   },
 ];
 
