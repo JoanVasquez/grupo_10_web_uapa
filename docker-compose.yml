@@ -29,6 +29,8 @@ services:
     environment:
       NODE_ENV: development
       PORT: 3000
+      CHOKIDAR_USEPOLLING: "true"
+      CHOKIDAR_INTERVAL: "1000"
       DATABASE_TYPE: postgres
       DATABASE_HOST: db
       DATABASE_PORT: 5432
@@ -42,7 +44,7 @@ services:
     volumes:
       - ./backend:/app
       - /app/node_modules
-    command: npm run dev
+    command: npm run dev -- --poll
 
   frontend:
     build:
@@ -55,6 +57,7 @@ services:
     environment:
       VITE_BASE_API: http://localhost:3000
       CHOKIDAR_USEPOLLING: "true"
+      CHOKIDAR_INTERVAL: "1000"
     ports:
       - "5173:5173"
     volumes:
