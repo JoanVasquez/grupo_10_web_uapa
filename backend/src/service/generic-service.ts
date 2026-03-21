@@ -5,10 +5,9 @@ export abstract class GenericService<T> implements ICRUD<T> {
   constructor(
     protected genericRepository: IRepository<T>,
     protected entityClass: new () => T,
-  ) { }
+  ) {}
 
   save(entity: Partial<T>): Promise<T> {
-    console.log(entity);
     return this.genericRepository.create(entity);
   }
   findById(id: string): Promise<T | null> {

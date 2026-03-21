@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { DynamicForm } from "../../index";
 import { FormField } from "../../../types/FormField";
 import { User } from "../../../types/User";
+import { ApiMutationError } from "../../../types/Response";
 import { validate } from "../../../utils/validation";
 import { useRegisterMutation } from "../../../stores/slices/api/authApi";
 import { useNavigate } from "react-router-dom";
@@ -46,17 +47,14 @@ const SignUp: React.FC<SignUpProps> = ({ onRegistered }) => {
     setErrors(newErrors);
     if (Object.keys(newErrors).length === 0) {
       try {
-        await register(values as User).unwrap();
+        await register(values).unwrap();
         handleReset();
         onRegistered?.();
-      } catch (error) {
-        const status = typeof error === "object" && error !== null && "status" in error ? error.status : undefined;
-        const data =
-          typeof error === "object" && error !== null && "data" in error ? error.data : undefined;
-        const message =
-          typeof data === "object" && data !== null && "_message" in data ? data._message : undefined;
+      } catch (error: unknown) {
+        const mutationError = error as ApiMutationError;
+        const message = mutationError.data?._message;
 
-        if (status === 409) {
+        if (mutationError.status === 409) {
           setSubmitError(typeof message === "string" ? message : "Ya existe una cuenta con ese correo.");
           return;
         }
@@ -72,9 +70,9 @@ const SignUp: React.FC<SignUpProps> = ({ onRegistered }) => {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (token) {
-      navigate('/dashboard');
+      navigate("/dashboard");
     }
   }, [navigate]);
 

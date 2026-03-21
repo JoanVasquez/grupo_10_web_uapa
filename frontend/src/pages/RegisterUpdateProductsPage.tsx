@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { Section, DynamicForm as ProductForm, Alert } from "../components/index";
 import { Product } from "../types/Product";
 import { FormField } from "../types/FormField";
+import { ApiMutationError, Response } from "../types/Response";
 import { validate } from "../utils/validation";
 import { useCreateProductMutation } from "../stores/slices/api/productApi";
-import { Response } from "../types/Response";
 import { useNavigate } from "react-router-dom";
 
 const PRODUCT_FIELDS: FormField[] = [
@@ -58,12 +58,11 @@ const RegisterProductsPage: React.FC = () => {
           handleReset();
           setSubmitSuccess("Producto registrado correctamente.");
         }
-      } catch (error) {
-        const status = typeof error === "object" && error !== null && "status" in error ? error.status : undefined;
-        const data = typeof error === "object" && error !== null && "data" in error ? error.data : undefined;
-        const message = typeof data === "object" && data !== null && "_message" in data ? data._message : undefined;
+      } catch (error: unknown) {
+        const mutationError = error as ApiMutationError;
+        const message = mutationError.data?._message;
 
-        if (status === 403 && typeof message === "string" && message.includes("expired token")) {
+        if (mutationError.status === 403 && typeof message === "string" && message.includes("expired token")) {
           localStorage.removeItem("token");
           navigate("/", { replace: true });
           return;
