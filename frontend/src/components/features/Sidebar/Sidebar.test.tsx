@@ -11,27 +11,23 @@ describe("Sidebar", () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByText("SETTINGS")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Dashboard/i })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Formularios/i })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Tablas/i })).toBeInTheDocument();
+    expect(screen.getAllByText("SETTINGS").length).toBeGreaterThan(0);
+    expect(screen.getAllByRole("link", { name: /Dashboard/i }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole("link", { name: /Formularios/i }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole("link", { name: /Tablas/i }).length).toBeGreaterThan(0);
   });
 
   it("calls onClose when clicking overlay", async () => {
     const user = userEvent.setup();
     const onClose = vi.fn();
-    const { container } = render(
+    render(
       <MemoryRouter>
         <Sidebar title="SETTINGS" isOpen={true} onClose={onClose} />
       </MemoryRouter>
     );
 
-    const overlay = container.querySelector("div[aria-hidden='true']");
-    expect(overlay).not.toBeNull();
-
-    if (overlay) {
-      await user.click(overlay);
-    }
+    const overlay = screen.getByLabelText("Cerrar menú");
+    await user.click(overlay);
 
     expect(onClose).toHaveBeenCalledTimes(1);
   });

@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { Card, SignIn, SignUp } from "../components";
+import { Alert, Card, SignIn, SignUp } from "../components";
 
 const AuthPage: React.FC = () => {
   const [mode, setMode] = useState<"signin" | "signup">("signin");
+  const [authMessage, setAuthMessage] = useState("");
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-slate-100 px-4">
@@ -10,7 +11,10 @@ const AuthPage: React.FC = () => {
         <div className="grid grid-cols-2 rounded-xl bg-slate-100 p-1">
           <button
             type="button"
-            onClick={() => setMode("signin")}
+            onClick={() => {
+              setMode("signin");
+              setAuthMessage("");
+            }}
             className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
               mode === "signin"
                 ? "bg-white text-slate-900 shadow-sm"
@@ -22,7 +26,10 @@ const AuthPage: React.FC = () => {
 
           <button
             type="button"
-            onClick={() => setMode("signup")}
+            onClick={() => {
+              setMode("signup");
+              setAuthMessage("");
+            }}
             className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
               mode === "signup"
                 ? "bg-white text-slate-900 shadow-sm"
@@ -34,7 +41,19 @@ const AuthPage: React.FC = () => {
         </div>
 
         <div className="p-4 sm:p-5">
-          {mode === "signin" ? <SignIn /> : <SignUp />}
+          <div className="space-y-4">
+            <Alert message={authMessage} variant="success" />
+            {mode === "signin" ? (
+              <SignIn />
+            ) : (
+              <SignUp
+                onRegistered={(message) => {
+                  setAuthMessage(message);
+                  setMode("signin");
+                }}
+              />
+            )}
+          </div>
         </div>
       </Card>
     </main>
