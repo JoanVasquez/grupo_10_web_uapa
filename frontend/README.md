@@ -23,6 +23,7 @@ Aplicación de React + TypeScript construida con Vite.
 - Componentes UI reutilizables (`Button`, `Input`, `Textarea`, `Badge`, `Icons`, `Section`).
 - Pruebas unitarias de componentes con Vitest + Testing Library.
 - Pipeline CI en GitHub Actions para lint, test y build.
+- Hook de Husky en `pre-commit` para ejecutar lint, test y build antes de cada commit.
 - Despliegue automático a GitHub Pages y soporte de contenedores con Docker + Nginx.
 
 ## Requisitos
@@ -76,7 +77,10 @@ Ejecuta esto antes de subir código:
 ```bash
 npm run lint
 npm run test
+npm run build
 ```
+
+Después de instalar dependencias, Husky configura un hook `pre-commit` que ejecuta automáticamente estas validaciones antes de permitir el commit.
 
 ## GitHub Actions
 
