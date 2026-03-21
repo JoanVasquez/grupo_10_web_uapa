@@ -34,7 +34,7 @@ const AuthPage: React.FC = () => {
         </div>
 
         <div className="p-4 sm:p-5">
-          {mode === "signin" ? <SignIn /> : <SignUp />}
+          {mode === "signin" ? <SignIn /> : <SignUp onRegistered={() => setMode("signin")} />}
         </div>
       </Card>
     </main>
