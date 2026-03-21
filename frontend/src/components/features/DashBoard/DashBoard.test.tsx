@@ -9,6 +9,7 @@ import Dashboard from "./DashBoard";
 
 const HEADER_ACTIONS = [{ id: "bell", label: "Notifications", icon: <span>Bell</span> }];
 const getProductQueryMock = vi.fn(() => ({ data: { _data: [] }, isLoading: false }));
+const fetchMock = vi.fn();
 
 vi.mock("../../../stores/slices/api/productApi", async () => {
   const actual = await vi.importActual<typeof import("../../../stores/slices/api/productApi")>("../../../stores/slices/api/productApi");
@@ -52,7 +53,22 @@ const renderDashboard = (token: string | null) => {
 beforeEach(() => {
   localStorage.clear();
   getProductQueryMock.mockClear();
+  fetchMock.mockReset();
+  vi.stubGlobal("fetch", fetchMock);
 });
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+});
+
+const createToken = (payload: Record<string, unknown>) => {
+  const encodedPayload = btoa(JSON.stringify(payload))
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/g, "");
+
+  return `header.${encodedPayload}.signature`;
+};
 
 describe("Dashboard", () => {
   it("redirects to / when there is no token", () => {
@@ -75,5 +91,39 @@ describe("Dashboard", () => {
     expect(screen.queryByLabelText("Cerrar menú")).not.toBeInTheDocument();
     await user.click(screen.getByLabelText("Toggle menu"));
     expect(screen.getByLabelText("Cerrar menú")).toBeInTheDocument();
+  });
+
+  it("uses the decoded username from the token when no username is stored", () => {
+    renderDashboard(createToken({ userName: "Token User" }));
+
+    expect(screen.getAllByText("Token User")).not.toHaveLength(0);
+    expect(localStorage.getItem("username")).toBe("Token User");
+  });
+
+  it("falls back to the default username when the token payload cannot be decoded", () => {
+    renderDashboard("invalid.token.value");
+
+    expect(screen.getAllByText("Usuario")).not.toHaveLength(0);
+    expect(localStorage.getItem("username")).toBeNull();
+  });
+
+  it("logs out and clears the persisted session", async () => {
+    const user = userEvent.setup();
+    fetchMock.mockResolvedValueOnce(new Response(null, { status: 204 }));
+    localStorage.setItem("username", "Persisted User");
+    renderDashboard("fake-token");
+
+    await user.click(screen.getByRole("button", { name: "Cerrar sesión" }));
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      expect.stringContaining("/api/auth/logout"),
+      expect.objectContaining({
+        method: "GET",
+        credentials: "include",
+      })
+    );
+    expect(localStorage.getItem("token")).toBeNull();
+    expect(localStorage.getItem("username")).toBeNull();
+    expect(screen.queryByLabelText("Sidebar")).not.toBeInTheDocument();
   });
 });
