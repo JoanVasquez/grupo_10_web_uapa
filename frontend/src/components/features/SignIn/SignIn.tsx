@@ -41,7 +41,8 @@ const SignIn: React.FC = () => {
     setErrors(newErrors);
     if (Object.keys(newErrors).length === 0) {
       const response: Login = await login(values).unwrap();
-      localStorage.setItem('token', response._data.token)
+      localStorage.setItem('token', response._data.token);
+      localStorage.setItem('username', values.email.split('@')[0] ?? values.email);
       handleReset();
       navigate('/dashboard', { replace: true });
     }
@@ -68,9 +69,9 @@ const SignIn: React.FC = () => {
         handleChange={handleChange}
         onSubmit={handleSubmit}
         onReset={handleReset}
-        submitLabel="Sign In"
-        resetLabel="Clear"
-        ariaLabel="Sign in form"
+        submitLabel="Iniciar sesión"
+        resetLabel="Limpiar"
+        ariaLabel="Formulario de inicio de sesión"
         values={values}
         errors={errors}
         columns={1}

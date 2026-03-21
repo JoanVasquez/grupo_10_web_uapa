@@ -34,8 +34,8 @@ describe('app shell and store wiring', () => {
       </Provider>,
     );
 
-    expect(screen.getAllByRole('button', { name: /sign in/i })).toHaveLength(2);
-    expect(screen.getByRole('button', { name: /sign up/i })).toBeInTheDocument();
+    expect(screen.getAllByRole('button', { name: /iniciar sesión/i })).toHaveLength(2);
+    expect(screen.getByRole('button', { name: /crear cuenta/i })).toBeInTheDocument();
     expect(HEADER_ACTIONS).toHaveLength(2);
   });
 

@@ -83,8 +83,8 @@ describe('auth and page flows', () => {
     const user = userEvent.setup();
     renderWithProviders(<AuthPage />);
 
-    expect(screen.getAllByRole('button', { name: /sign in/i }).length).toBeGreaterThan(0);
-    await user.click(screen.getByRole('button', { name: /^sign up$/i }));
+    expect(screen.getAllByRole('button', { name: /iniciar sesión/i }).length).toBeGreaterThan(0);
+    await user.click(screen.getByRole('button', { name: /^crear cuenta$/i }));
     expect(screen.getByRole('button', { name: /create account/i })).toBeInTheDocument();
   });
 

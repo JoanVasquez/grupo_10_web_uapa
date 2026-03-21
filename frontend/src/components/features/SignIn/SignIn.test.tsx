@@ -27,14 +27,14 @@ describe("SignIn", () => {
 
     expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /sign in/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /iniciar sesión/i })).toBeInTheDocument();
   });
 
   it("shows validation errors on empty submit", async () => {
     const user = userEvent.setup();
     renderSignIn();
 
-    await user.click(screen.getByRole("button", { name: /sign in/i }));
+    await user.click(screen.getByRole("button", { name: /iniciar sesión/i }));
 
     expect(screen.getAllByText("Este campo es obligatorio")).toHaveLength(2);
   });
@@ -55,7 +55,7 @@ describe("SignIn", () => {
     renderSignIn();
 
     await user.type(screen.getByLabelText(/email/i), "test@example.com");
-    await user.click(screen.getByRole("button", { name: /clear/i }));
+    await user.click(screen.getByRole("button", { name: /limpiar/i }));
 
     expect(screen.getByLabelText(/email/i)).toHaveValue("");
   });

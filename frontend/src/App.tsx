@@ -5,7 +5,7 @@ import { HEADER_ACTIONS } from "./components/common/Icons/iconsData";
 const App: React.FC = () => {
   return (
     <AppLayout
-      sidebarTitle="SETTINGS"
+      sidebarTitle="Panel de gestión"
       headerActions={HEADER_ACTIONS}
       avatar="https://api.dicebear.com/7.x/adventurer/svg?seed=Felix"
     />

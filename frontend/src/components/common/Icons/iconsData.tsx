@@ -9,7 +9,7 @@ export interface NavItem {
 
 export const NAV_ITEMS: NavItem[] = [
   {
-    label: "Dashboard",
+    label: "Resumen general",
     icon: (
       <Icons
         width="18"
@@ -32,7 +32,7 @@ export const NAV_ITEMS: NavItem[] = [
     href: "/dashboard",
   },
   {
-    label: "Formularios",
+    label: "Registrar producto",
     icon: (
       <Icons
         width="18"
@@ -57,7 +57,7 @@ export const NAV_ITEMS: NavItem[] = [
     // active: true,
   },
   {
-    label: "Tablas",
+    label: "Lista de productos",
     icon: (
       <Icons
         width="18"
@@ -102,7 +102,7 @@ export const HEADER_ACTIONS = [
       </Icons>
     ),
     badge: 7,
-    label: "Notifications",
+    label: "Notificaciones",
   },
   {
     id: "mail",
@@ -124,6 +124,6 @@ export const HEADER_ACTIONS = [
       </Icons>
     ),
     badge: 3,
-    label: "Messages",
+    label: "Mensajes",
   },
 ];
