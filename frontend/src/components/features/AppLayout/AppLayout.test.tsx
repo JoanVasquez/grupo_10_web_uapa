@@ -3,33 +3,35 @@ import { MemoryRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import { authApi } from "../../../stores/slices/api/authApi";
-import authReducer from "../../../stores/slices/authSlice";
 import AppLayout from "./AppLayout";
 import { HEADER_ACTIONS } from "../../common/Icons/iconsData";
 
-const buildStore = (token: string | null) =>
+const buildStore = () =>
   configureStore({
-    reducer: { auth: authReducer, [authApi.reducerPath]: authApi.reducer },
+    reducer: { [authApi.reducerPath]: authApi.reducer },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(authApi.middleware),
-    preloadedState: { auth: { token } },
   });
+
+beforeEach(() => {
+  localStorage.clear();
+});
 
 describe("AppLayout", () => {
   it("renders AuthPage on /", () => {
     render(
-      <Provider store={buildStore(null)}>
+      <Provider store={buildStore()}>
         <MemoryRouter initialEntries={["/"]}>
           <AppLayout sidebarTitle="SETTINGS" headerActions={HEADER_ACTIONS} />
         </MemoryRouter>
       </Provider>
     );
 
-    expect(screen.getByRole("button", { name: /sign in/i })).toBeInTheDocument();
+    expect(screen.getAllByRole("button", { name: /sign in/i }).length).toBeGreaterThan(0);
   });
 
   it("redirects /dashboard to AuthPage when no token", () => {
     render(
-      <Provider store={buildStore(null)}>
+      <Provider store={buildStore()}>
         <MemoryRouter initialEntries={["/dashboard"]}>
           <AppLayout sidebarTitle="SETTINGS" headerActions={HEADER_ACTIONS} />
         </MemoryRouter>
@@ -40,8 +42,10 @@ describe("AppLayout", () => {
   });
 
   it("renders Dashboard on /dashboard when token is present", () => {
+    localStorage.setItem("token", "fake-token");
+
     render(
-      <Provider store={buildStore("fake-token")}>
+      <Provider store={buildStore()}>
         <MemoryRouter initialEntries={["/dashboard"]}>
           <AppLayout sidebarTitle="SETTINGS" headerActions={HEADER_ACTIONS} />
         </MemoryRouter>
