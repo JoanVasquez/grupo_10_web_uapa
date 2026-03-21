@@ -4,12 +4,12 @@ import { FormField } from "../../../types/FormField";
 
 export type { FormField };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type AnyRecord = Record<string, any>;
+type FormValue = string | number | undefined;
+type FormValues = Record<string, FormValue>;
 
-interface DynamicFormProps<T extends AnyRecord> {
+interface DynamicFormProps<T extends FormValues> {
   fields: FormField[];
-  onSubmit: (e: React.FormEvent) => void;
+  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   onReset?: () => void;
   submitLabel?: string;
   resetLabel?: string;
@@ -20,7 +20,7 @@ interface DynamicFormProps<T extends AnyRecord> {
   columns?: 1 | 2;
 }
 
-function DynamicForm<T extends AnyRecord>({
+function DynamicForm<T extends FormValues>({
   fields,
   onSubmit,
   onReset,
@@ -40,7 +40,7 @@ function DynamicForm<T extends AnyRecord>({
     <form onSubmit={onSubmit} onReset={onReset} className="space-y-6" aria-label={ariaLabel}>
       <div className={columns === 2 ? "grid gap-4 sm:grid-cols-2" : "space-y-4"}>
         {fields.map((field) => {
-          const fieldId = field.id as keyof T;
+          const fieldId = field.id as Extract<keyof T, string>;
           const fieldValue = values[fieldId];
           const error = errors[fieldId];
           const spanClass = field.colSpan === 2 ? "sm:col-span-2" : "";
@@ -51,12 +51,10 @@ function DynamicForm<T extends AnyRecord>({
                 <Textarea
                   id={field.id}
                   label={field.label}
-                  placeholder={field.placeholder}
+                  {...(field.placeholder ? { placeholder: field.placeholder } : {})}
                   value={fieldValue ?? ""}
-                  error={error}
-                  onChange={(e) =>
-                    handleChange(fieldId, mapInputValue<typeof fieldId>(field.type, e.target.value))
-                  }
+                  {...(error ? { error } : {})}
+                  onChange={(e) => handleChange(fieldId, mapInputValue(field.type, e.target.value))}
                 />
               </div>
             );
@@ -68,12 +66,10 @@ function DynamicForm<T extends AnyRecord>({
                 id={field.id}
                 label={field.label}
                 type={field.type || "text"}
-                placeholder={field.placeholder}
+                {...(field.placeholder ? { placeholder: field.placeholder } : {})}
                 value={fieldValue ?? ""}
-                error={error}
-                onChange={(e) =>
-                  handleChange(fieldId, mapInputValue<typeof fieldId>(field.type, e.target.value))
-                }
+                {...(error ? { error } : {})}
+                onChange={(e) => handleChange(fieldId, mapInputValue(field.type, e.target.value))}
               />
             </div>
           );

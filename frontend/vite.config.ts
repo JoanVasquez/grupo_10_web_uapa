@@ -1,12 +1,8 @@
 import { defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react";
-import tailwindcss from '@tailwindcss/vite'
-
-const repoName = process.env.GITHUB_REPOSITORY?.split("/")[1];
-// const base = process.env.GITHUB_ACTIONS === "true" && repoName ? `/${repoName}/` : "/";
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
-  // base,
   plugins: [react(), tailwindcss()],
   server: {
     host: "0.0.0.0",

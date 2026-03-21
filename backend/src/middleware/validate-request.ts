@@ -3,7 +3,7 @@ import { validationResult } from "express-validator";
 import { HttpStatus } from "../utils/http-status";
 import ResponseTemplate from "../utils/response-template";
 
-export const validateRequest = (req: Request, res: Response, next: NextFunction) => {
+export const validateRequest = (req: Request, res: Response, next: NextFunction): void | Response => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -18,5 +18,6 @@ export const validateRequest = (req: Request, res: Response, next: NextFunction)
         ),
       );
   }
+
   next();
 };

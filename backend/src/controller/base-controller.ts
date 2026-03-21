@@ -9,7 +9,6 @@ export default abstract class BaseController<T> {
   save? = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const entityCreated = await this.baseService.save(req.body);
-      console.log('TEEEEEEEEEEEEEEEEE3EEEEST')
       res
         .status(HttpStatus.CREATED.code)
         .send(
@@ -27,7 +26,11 @@ export default abstract class BaseController<T> {
 
   update? = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const id: string = req.params.id;
+      const id = req.params.id;
+      if (!id) {
+        throw new Error("Missing entity id");
+      }
+
       const updatedEntity = await this.baseService.update(id, req.body);
 
       res
@@ -47,7 +50,11 @@ export default abstract class BaseController<T> {
 
   delete? = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const id: string = req.params.id;
+      const id = req.params.id;
+      if (!id) {
+        throw new Error("Missing entity id");
+      }
+
       const isDeleted = await this.baseService.delete(id);
 
       res
@@ -67,7 +74,11 @@ export default abstract class BaseController<T> {
 
   findById? = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const id: string = req.params.id;
+      const id = req.params.id;
+      if (!id) {
+        throw new Error("Missing entity id");
+      }
+
       const entity = await this.baseService.findById(id);
 
       res

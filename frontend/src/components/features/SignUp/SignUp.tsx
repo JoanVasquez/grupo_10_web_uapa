@@ -5,7 +5,6 @@ import { User } from "../../../types/User";
 import { validate } from "../../../utils/validation";
 import { useRegisterMutation } from "../../../stores/slices/api/authApi";
 import { useNavigate } from "react-router-dom";
-import { Alert } from "../../index";
 
 type SignUpForm = Omit<User, "id" | "is_active">;
 
@@ -77,7 +76,7 @@ const SignUp: React.FC<SignUpProps> = ({ onRegistered }) => {
     if (token) {
       navigate('/dashboard');
     }
-  }, []);
+  }, [navigate]);
 
   return (
     <div className="space-y-4">
