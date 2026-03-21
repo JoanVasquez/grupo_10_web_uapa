@@ -108,6 +108,7 @@ export const useProductForm = () => {
 
           setSubmitError("");
           setSubmitSuccess(isEditing ? "Producto actualizado correctamente." : "Producto registrado correctamente.");
+          localStorage.setItem(`product-${values.name}`, JSON.stringify(values));
         }
       } catch (error: unknown) {
         handleApiError(error, isEditing ? "No se pudo actualizar el producto." : "No se pudo registrar el producto.");

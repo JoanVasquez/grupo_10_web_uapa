@@ -67,6 +67,7 @@ export const useProductsTable = () => {
     try {
       const response = await deleteProduct(String(product.id)).unwrap();
       setFeedback({ type: "success", message: response._message ?? "Producto eliminado correctamente." });
+      localStorage.removeItem(`product-${product.name}`);
       refetch();
     } catch (error: unknown) {
       const mutationError = error as ApiMutationError;
