@@ -38,12 +38,12 @@ function DynamicForm<T extends FormValues>({
 
   return (
     <form onSubmit={onSubmit} onReset={onReset} className="space-y-6" aria-label={ariaLabel}>
-      <div className={columns === 2 ? "grid gap-4 sm:grid-cols-2" : "space-y-4"}>
+      <div className={columns === 2 ? "grid gap-4 md:grid-cols-2" : "space-y-4"}>
         {fields.map((field) => {
           const fieldId = field.id as Extract<keyof T, string>;
           const fieldValue = values[fieldId];
           const error = errors[fieldId];
-          const spanClass = field.colSpan === 2 ? "sm:col-span-2" : "";
+          const spanClass = field.colSpan === 2 ? "md:col-span-2" : "";
 
           if (field.type === "textarea") {
             return (
@@ -76,10 +76,10 @@ function DynamicForm<T extends FormValues>({
         })}
       </div>
 
-      <div className="flex flex-col gap-3 sm:flex-row">
-        <Button type="submit">{submitLabel}</Button>
+      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+        <Button type="submit" className="w-full sm:w-auto">{submitLabel}</Button>
         {onReset && (
-          <Button type="reset" variant="secondary" onClick={onReset}>
+          <Button type="reset" variant="secondary" onClick={onReset} className="w-full sm:w-auto">
             {resetLabel}
           </Button>
         )}

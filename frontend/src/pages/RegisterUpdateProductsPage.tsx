@@ -121,7 +121,11 @@ const RegisterProductsPage: React.FC = () => {
   };
 
   return (
-    <Section title={pageTitle} headingLevel={1}>
+    <Section
+      title={pageTitle}
+      subtitle="Completa el formulario cómodamente desde móvil, tablet o escritorio."
+      headingLevel={1}
+    >
       <div className="space-y-4">
         <Alert message={submitSuccess} variant="success" />
         <Alert message={submitError} variant="error" />
