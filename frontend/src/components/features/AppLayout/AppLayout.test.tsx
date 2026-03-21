@@ -37,19 +37,19 @@ describe("AppLayout", () => {
     render(
       <Provider store={buildStore()}>
         <MemoryRouter initialEntries={["/"]}>
-          <AppLayout sidebarTitle="SETTINGS" headerActions={HEADER_ACTIONS} />
+          <AppLayout sidebarTitle="Panel de gestión" headerActions={HEADER_ACTIONS} />
         </MemoryRouter>
       </Provider>
     );
 
-    expect(screen.getAllByRole("button", { name: /sign in/i }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole("button", { name: /iniciar sesión/i }).length).toBeGreaterThan(0);
   });
 
   it("redirects /dashboard to AuthPage when no token", () => {
     render(
       <Provider store={buildStore()}>
         <MemoryRouter initialEntries={["/dashboard"]}>
-          <AppLayout sidebarTitle="SETTINGS" headerActions={HEADER_ACTIONS} />
+          <AppLayout sidebarTitle="Panel de gestión" headerActions={HEADER_ACTIONS} />
         </MemoryRouter>
       </Provider>
     );
@@ -63,7 +63,7 @@ describe("AppLayout", () => {
     render(
       <Provider store={buildStore()}>
         <MemoryRouter initialEntries={["/dashboard"]}>
-          <AppLayout sidebarTitle="SETTINGS" headerActions={HEADER_ACTIONS} />
+          <AppLayout sidebarTitle="Panel de gestión" headerActions={HEADER_ACTIONS} />
         </MemoryRouter>
       </Provider>
     );

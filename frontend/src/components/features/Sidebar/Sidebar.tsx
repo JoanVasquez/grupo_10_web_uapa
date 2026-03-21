@@ -37,7 +37,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           </div>
 
           <p className="text-[11px] font-medium uppercase tracking-[0.35em] text-slate-400">
-            Panel
+            Navegación
           </p>
 
           <h2 className="mt-2 text-[1.8rem] font-extrabold uppercase tracking-[0.18em] text-white">
@@ -52,6 +52,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             <li key={item.href}>
               <NavLink
                 to={item.href}
+                end={item.href === "/dashboard"}
                 onClick={() => {
                   if (window.innerWidth < 768) {
                     onClose?.();
@@ -80,7 +81,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       </nav>
 
       <div className="border-t border-white/10 px-4 py-4">
-        <p className="text-center text-xs text-slate-400">Gestión de productos</p>
+        <p className="text-center text-xs text-slate-400">Administra productos y consulta tu inventario.</p>
       </div>
     </div>
   );

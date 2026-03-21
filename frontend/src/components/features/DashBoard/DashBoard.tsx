@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import React, { useEffect, useMemo, useState } from "react";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { Sidebar, Header } from "../../index";
 import { HeaderAction } from "../Header/Header";
 import RegisterProductsPage from "../../../pages/RegisterUpdateProductsPage";
 import ProductsTablePage from "../../../pages/ProductsTablePage";
+import { BASE_API } from "../../../utils/constants";
 
 interface DashboardProps {
   sidebarTitle: string;
@@ -12,6 +13,20 @@ interface DashboardProps {
   avatar?: string;
 }
 
+const getUserNameFromToken = (token: string | null): string => {
+  if (!token) return "";
+
+  try {
+    const [, payload] = token.split(".");
+    if (!payload) return "";
+
+    const decoded = JSON.parse(window.atob(payload.replace(/-/g, "+").replace(/_/g, "/")));
+    return typeof decoded.userName === "string" ? decoded.userName : "";
+  } catch {
+    return "";
+  }
+};
+
 const DashBoard: React.FC<DashboardProps> = ({
   sidebarTitle,
   headerActions,
@@ -19,6 +34,7 @@ const DashBoard: React.FC<DashboardProps> = ({
 }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -27,6 +43,35 @@ const DashBoard: React.FC<DashboardProps> = ({
       navigate("/", { replace: true });
     }
   }, [navigate]);
+
+  useEffect(() => {
+    setSidebarOpen(false);
+  }, [location.pathname]);
+
+  const userName = useMemo(() => {
+    const storedName = localStorage.getItem("username");
+    if (storedName) return storedName;
+
+    const decodedName = getUserNameFromToken(localStorage.getItem("token"));
+    if (decodedName) {
+      localStorage.setItem("username", decodedName);
+    }
+
+    return decodedName;
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await fetch(`${BASE_API}/api/auth/logout`, {
+        method: "GET",
+        credentials: "include",
+      });
+    } finally {
+      localStorage.removeItem("token");
+      localStorage.removeItem("username");
+      navigate("/", { replace: true });
+    }
+  };
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-slate-100">
@@ -39,6 +84,8 @@ const DashBoard: React.FC<DashboardProps> = ({
       <div className="min-h-screen md:ml-[270px]">
         <Header
           actions={headerActions}
+          userName={userName}
+          onLogout={handleLogout}
           {...(avatar ? { avatar } : {})}
           onMenuClick={() => setSidebarOpen((prev) => !prev)}
         />

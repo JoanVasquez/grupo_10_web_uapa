@@ -19,7 +19,7 @@ const AuthPage: React.FC = () => {
                 : "text-slate-500 hover:text-slate-800"
             }`}
           >
-            Sign In
+            Iniciar sesión
           </button>
 
           <button
@@ -33,7 +33,7 @@ const AuthPage: React.FC = () => {
                 : "text-slate-500 hover:text-slate-800"
             }`}
           >
-            Sign Up
+            Crear cuenta
           </button>
         </div>
 
