@@ -42,13 +42,24 @@ export const useProductForm = () => {
   const [createProduct] = useCreateProductMutation();
   const [updateProduct] = useUpdateProductMutation();
   const isEditing = Boolean(id);
-  const { data: productResponse, isLoading: isLoadingProduct } = useGetProductByIdQuery(id ?? "", { skip: !id });
+  const { data: productResponse, isLoading: isLoadingProduct } = useGetProductByIdQuery(id ?? "", {
+    skip: !id,
+    refetchOnMountOrArgChange: true,
+  });
 
   useEffect(() => {
-    if (productResponse?._data && isEditing) {
-      setValues(productResponse._data as Product);
+    if (!isEditing) {
+      setValues(INITIAL_VALUES);
+      return;
     }
-  }, [isEditing, productResponse]);
+
+    if (productResponse?._data) {
+      setValues({
+        ...INITIAL_VALUES,
+        ...(productResponse._data as Product),
+      });
+    }
+  }, [id, isEditing, productResponse]);
 
   const pageTitle = useMemo(() => (isEditing ? "Actualizar producto" : "Registrar productos"), [isEditing]);
 
