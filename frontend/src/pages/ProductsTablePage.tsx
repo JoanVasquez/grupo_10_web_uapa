@@ -5,7 +5,10 @@ import { Product } from "../types/Product";
 import { ApiMutationError, Response } from "../types/Response";
 import { useDeleteProductMutation, useGetProductQuery } from "../stores/slices/api/productApi";
 
-const resolveProducts = (response?: Response<Product[]> | Response<Product>[]): Product[] => {
+type ProductCollection = { items: Product[]; total: number };
+type ProductQueryResponse = Response<ProductCollection> | Response<Product[]> | Response<Product>[];
+
+const resolveProducts = (response?: ProductQueryResponse): Product[] => {
   if (!response) {
     return [];
   }
@@ -16,7 +19,15 @@ const resolveProducts = (response?: Response<Product[]> | Response<Product>[]): 
       .filter((product): product is Product => Boolean(product));
   }
 
-  return Array.isArray(response._data) ? response._data : [];
+  if (Array.isArray(response._data)) {
+    return response._data;
+  }
+
+  if (response._data && Array.isArray((response._data as ProductCollection).items)) {
+    return (response._data as ProductCollection).items;
+  }
+
+  return [];
 };
 
 const ProductsTablePage: React.FC = () => {

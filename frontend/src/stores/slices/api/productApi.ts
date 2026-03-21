@@ -3,6 +3,8 @@ import { BASE_API } from '../../../utils/constants'
 import { Response } from '../../../types/Response';
 import { Product } from '../../../types/Product';
 
+type ProductListResponse = Response<{ items: Product[]; total: number }> | Response<Product[]> | Response<Product>[];
+
 export const productApi = createApi({
     reducerPath: 'productApi',
     tagTypes: ['Product'],
@@ -28,17 +30,21 @@ export const productApi = createApi({
             invalidatesTags: ['Product'],
         }),
         updateProduct: builder.mutation<Response, Product>({
-            query: (productData: Product) => ({
-                url: '/api/product',
+            query: ({ id, ...productData }: Product) => ({
+                url: `/api/product/${id}`,
                 method: 'PUT',
                 body: productData,
             }),
             invalidatesTags: ['Product'],
         }),
-        getProduct: builder.query<Response<Product[]> | Response<Product>[], void>({
+        getProduct: builder.query<ProductListResponse, void>({
             query: () => ({
                 url: '/api/product',
                 method: 'GET',
+                params: {
+                    page: 1,
+                    per_page: 10,
+                },
             }),
             providesTags: ['Product'],
         }),
