@@ -5,7 +5,18 @@ import { Login, Response } from "../../../types/Response";
 
 export const authApi = createApi({
   reducerPath: "authApi",
-  baseQuery: fetchBaseQuery({ baseUrl: BASE_API }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: BASE_API,
+    prepareHeaders: (headers) => {
+      const token = localStorage.getItem("token");
+
+      if (token) {
+        headers.set("authorization", `Bearer ${token}`);
+      }
+
+      return headers;
+    },
+  }),
   endpoints: (builder) => ({
     register: builder.mutation<Response<User>, User>({
       query: (userData: User) => ({
@@ -21,7 +32,7 @@ export const authApi = createApi({
         body: credentials,
       }),
     }),
-    logout: builder.query<Response<null>, void>({
+    logout: builder.mutation<Response<null>, void>({
       query: () => ({
         url: "/api/auth/logout",
         method: "GET",
@@ -30,4 +41,4 @@ export const authApi = createApi({
   }),
 });
 
-export const { useRegisterMutation, useLoginMutation } = authApi;
+export const { useRegisterMutation, useLoginMutation, useLogoutMutation } = authApi;

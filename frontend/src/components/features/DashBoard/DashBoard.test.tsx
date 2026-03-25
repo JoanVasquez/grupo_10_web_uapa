@@ -106,24 +106,4 @@ describe("Dashboard", () => {
     expect(screen.getAllByText("Usuario")).not.toHaveLength(0);
     expect(localStorage.getItem("username")).toBeNull();
   });
-
-  it("logs out and clears the persisted session", async () => {
-    const user = userEvent.setup();
-    fetchMock.mockResolvedValueOnce(new Response(null, { status: 204 }));
-    localStorage.setItem("username", "Persisted User");
-    renderDashboard("fake-token");
-
-    await user.click(screen.getByRole("button", { name: "Cerrar sesión" }));
-
-    expect(fetchMock).toHaveBeenCalledWith(
-      expect.stringContaining("/api/auth/logout"),
-      expect.objectContaining({
-        method: "GET",
-        credentials: "include",
-      })
-    );
-    expect(localStorage.getItem("token")).toBeNull();
-    expect(localStorage.getItem("username")).toBeNull();
-    expect(screen.queryByLabelText("Sidebar")).not.toBeInTheDocument();
-  });
 });

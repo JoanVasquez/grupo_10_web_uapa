@@ -4,7 +4,7 @@ import { Sidebar, Header } from "../../index";
 import { HeaderAction } from "../Header/Header";
 import RegisterProductsPage from "../../../pages/RegisterUpdateProductsPage";
 import ProductsTablePage from "../../../pages/ProductsTablePage";
-import { BASE_API } from "../../../utils/constants";
+import { useLogoutMutation } from "../../../stores/slices/api/authApi";
 
 interface DashboardProps {
   sidebarTitle: string;
@@ -27,14 +27,11 @@ const getUserNameFromToken = (token: string | null): string => {
   }
 };
 
-const DashBoard: React.FC<DashboardProps> = ({
-  sidebarTitle,
-  headerActions,
-  avatar,
-}) => {
+const DashBoard: React.FC<DashboardProps> = ({ sidebarTitle, headerActions, avatar }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const [logout] = useLogoutMutation();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -61,25 +58,15 @@ const DashBoard: React.FC<DashboardProps> = ({
   }, []);
 
   const handleLogout = async () => {
-    try {
-      await fetch(`${BASE_API}/api/auth/logout`, {
-        method: "GET",
-        credentials: "include",
-      });
-    } finally {
-      localStorage.removeItem("token");
-      localStorage.removeItem("username");
-      navigate("/", { replace: true });
-    }
+    await logout();
+    localStorage.removeItem("token");
+    localStorage.removeItem("username");
+    navigate("/", { replace: true });
   };
 
   return (
     <div className="min-h-screen overflow-x-clip bg-slate-100">
-      <Sidebar
-        title={sidebarTitle}
-        isOpen={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
-      />
+      <Sidebar title={sidebarTitle} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <div className="min-h-screen md:ml-[250px] lg:ml-[270px]">
         <Header
